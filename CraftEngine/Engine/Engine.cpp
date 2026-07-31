@@ -1,4 +1,6 @@
-#include "Engine.h"
+﻿#include "Engine.h"
+#include <Level/Level.h>
+
 #include <iostream>
 #include <windows.h> //언리얼에서 chrono를 사용하지 않아서 해당 라이브러리로 시계 기능을 사용하지 X
 #include <cassert>
@@ -12,7 +14,7 @@ namespace Craft
 	{
 		//instance 초기화
 		assert(!instance && "instance is not null"); //!instance <=> instance == nullptr
-		instance = this; //하나만 만들것(싱글톤)
+		instance = this; //하나만 만들것
 	}
 	Engine::~Engine()
 	{
@@ -64,6 +66,32 @@ namespace Craft
 				Tick(deltaTime);
 				//화면 그리기
 				Draw();
+			
+				//여기까지가 프레임처리완료.
+				//레벨전환처리
+				if (nextLevel) //해당 매커니즘 중요
+					//요청을 다음 프레임까지 미뤄서 처리 -> 문제 발생 가능성 낮춤.
+				{
+					//기존레벨 정리
+					if (mainLevel)
+					{
+						mainLevel.reset();
+					}
+					//추가 요청된 레벨을 메인 레벨로 설정.
+					mainLevel = nextLevel;
+					//포인터 정리
+					nextLevel.reset(); // ptr = nullptr; , 참조값 하나 --;
+				}
+
+				// 추가/제거 요청된 액터 정리.
+				if (mainLevel)
+				{
+					mainLevel->ProcessAddAndDestroyActors();
+				}
+
+
+
+
 				//입력상태 저장
 				SavePreviousInputStates();
 				//현재 시간을 이전시간으로 저장
@@ -90,19 +118,27 @@ namespace Craft
 	}
 	void Engine::OnInitialized()
 	{
+		if(!mainLevel || mainLevel->HasInitialized())
+		{
+			return;
+		}
 	}
 	void Engine::BeginPlay()
 	{
+		if (!mainLevel)
+		{
+			return;
+		}
+		//레벨에 이벤트 전달
+		mainLevel->BeginPlay();
 	}
 	void Engine::Tick(float deltaTime)
 	{
-		// Todo: deltaTime 출력
-		std::cout
-			<< "Engine::Tick() - deltaTime: "
-			<< deltaTime
-			<< " | FPS: " << (1.0f / deltaTime)
-			<< '\n';
-			
+		if (!mainLevel)
+		{
+			return;
+		}
+		mainLevel->Tick(deltaTime);
 	}
 	void Engine::Draw()
 	{

@@ -1,4 +1,4 @@
-#include "Actor.h"
+﻿#include "Actor.h"
 #include <Engine/Engine.h>
 
 namespace Craft
@@ -17,7 +17,7 @@ namespace Craft
 	void Actor::Tick(float deltaTime) //필요한 곳에서 구현해서 사용
 	{
 	}
-	void Actor::Drar() //필요한 곳에서 구현해서 사용
+	void Actor::Draw() //필요한 곳에서 구현해서 사용
 	{
 	}
 	void Actor::Destroy()

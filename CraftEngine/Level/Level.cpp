@@ -1,24 +1,88 @@
 ﻿#include "Level.h"
+
 namespace Craft
 {
 	Level::Level()
 	{
+
 	}
 	Level::~Level()
 	{
 	}
-	void Level::OnInitailized()
+	void Level::OnInitialized()
 	{
 		//초기화 됐다고 설정
 		hasInitialized = true;
 	}
 	void Level::BeginPlay()
 	{
+		//액터 초기화 시 1번 호출되는 이벤트.
+		for (std::shared_ptr<Actor>& actor : actorList)
+		{
+			//검증 이미 BeginPlay가 처리된 경우 건너뛰기
+			if (actor->HasBeganPlay())
+			{
+				continue;
+			}
+			actor->BeginPlay();
+		}
 	}
 	void Level::Tick(float deltaTime)
 	{
+		for (std::shared_ptr<Actor>& actor : actorList)
+		{
+			//검증 활성화 되지 않았으면 건너뛰기
+			if (actor->IsActive())
+			{
+				continue;
+			}
+			actor->Tick(deltaTime);
+		}
 	}
-	void Level::Drar()
+	void Level::Draw()
 	{
+		for (std::shared_ptr<Actor>& actor : actorList)
+		{
+			//검증 활성화 되지 않았으면 건너뛰기
+			if (actor->IsActive())
+			{
+				continue;
+			}
+			actor->Draw();
+		}
+	}
+	void Level::ProcessAddAndDestroyActors()
+	{
+		//액터 제거 처리
+		//이터레이터 기반 루프
+		for (auto iterator = actorList.begin(); iterator != actorList.end();)
+		{
+			//제거요청된 액터인지 확인
+			auto actor = *iterator; // auto == std::shared_ptr<Actor>
+			if (actor->HasExpired())
+			{
+				iterator = actorList.erase(iterator); //지워졌을 때 해당 칸을 가리키는 이터레이터 처리
+				//위 코드가 어려운 코드.
+				continue;
+			}
+			//다음 순번을 처리하기 위해 이터레이터(반복자, 포인터) 증가 처리.
+			++iterator;
+		}
+		//추가 처리
+		//추가요청된 목록이 없으면 종료
+		if (addRequestedActorList.empty())
+		{
+			return;
+		}
+		for (const auto& actor : addRequestedActorList)
+		{
+			actorList.emplace_back(actor);
+		}
+		//추가 처리된 목록 정리
+		addRequestedActorList.clear();
 	}
 }
+
+
+
+
