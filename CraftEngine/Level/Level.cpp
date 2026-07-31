@@ -32,7 +32,7 @@ namespace Craft
 		for (std::shared_ptr<Actor>& actor : actorList)
 		{
 			//검증 활성화 되지 않았으면 건너뛰기
-			if (actor->IsActive())
+			if (!actor->IsActive())
 			{
 				continue;
 			}

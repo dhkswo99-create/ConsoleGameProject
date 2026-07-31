@@ -103,7 +103,9 @@ namespace Craft
 		Shutdown();
 	}
 	void Engine::Quit()
-	{
+	{	
+		// 엔진 종료 플래그 설정.
+		isQuit = true;
 	}
 
 	Engine& Engine::Get()
@@ -122,6 +124,8 @@ namespace Craft
 		{
 			return;
 		}
+		// 초기화 이벤트 호출.
+		mainLevel->OnInitialized();
 	}
 	void Engine::BeginPlay()
 	{
