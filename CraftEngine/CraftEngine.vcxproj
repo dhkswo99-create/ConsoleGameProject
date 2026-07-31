@@ -47,6 +47,9 @@
     <OutDir>$(SolutionDir)Bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)Bin\$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -84,10 +87,12 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Actor\Actor.cpp" />
     <ClCompile Include="Engine\Engine.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Actor\Actor.h" />
     <ClInclude Include="Engine\Engine.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
