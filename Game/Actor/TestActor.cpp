@@ -17,6 +17,7 @@ void TestActor::Tick(float deltaTime)
 		//엔진종료
 		QuitGame();
 	}
+
 	if (Input::Get().GetKeyDown('A'))
 	{
 		std::cout
@@ -32,9 +33,6 @@ void TestActor::Tick(float deltaTime)
 		std::cout
 			<< "A key is holding\n";
 	}
-
-
-
 
 
 	//std::cout //프레임 출력

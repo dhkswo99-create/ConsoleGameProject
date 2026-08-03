@@ -36,7 +36,7 @@ namespace Craft
 	void Input::ProcessInput()
 	{
 		//현재 프레임에 키 입력이 발생했는지 확인.
-		for (int ix = 0; ix < keyCount; ++ix)
+		for (int ix = 0; ix < keyCount; ++ix) 
 		{
 			//키 눌림 저장.
 			//0x8000은 최상위 비트.
