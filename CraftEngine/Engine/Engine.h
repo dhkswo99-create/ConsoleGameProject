@@ -7,7 +7,7 @@ namespace Craft
 {
 	//전방선언
 	class Level;
-
+	class Input; //포인터류의 변수들을 관리하기 위함
 
 
 	// 메인 엔진 클래스.
@@ -86,8 +86,7 @@ namespace Craft
 		//추가 요청된 레벨
 		std::shared_ptr<Level> nextLevel;
 
-
-
-
+		//입력 시스템 변수
+		std::unique_ptr<Input> input; //변수 공유 필요 X >> 전역 접근
 	};
 }

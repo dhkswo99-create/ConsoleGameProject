@@ -1,5 +1,6 @@
 ﻿#include "Engine.h"
 #include <Level/Level.h>
+#include <Input/Input.h>
 
 #include <iostream>
 #include <windows.h> //언리얼에서 chrono를 사용하지 않아서 해당 라이브러리로 시계 기능을 사용하지 X
@@ -15,6 +16,10 @@ namespace Craft
 		//instance 초기화
 		assert(!instance && "instance is not null"); //!instance <=> instance == nullptr
 		instance = this; //하나만 만들것
+
+		//입력 개체 생성
+		input = std::make_unique<Input>();
+
 	}
 	Engine::~Engine()
 	{
@@ -32,7 +37,7 @@ namespace Craft
 		int64_t current = counter.QuadPart; // QuadPart -> 64비트 지원 시 사용 
 		int64_t previous = current;
 		// 고정 프레임으로 만들기 위한 값
-		float oneFrameTime = 1.0f / setting.framerate;
+		float oneFrameTime = 1.0f / setting.framerate; // <<까지 프레임 시간 구하는 코드
 
 
 		//엔진루프
@@ -45,7 +50,9 @@ namespace Craft
 			}
 
 			//입력처리
-			ProcessInput();
+			ProcessInput(); //입력을 큐에 저장하는 형태가 아닐까 싶음
+			//저장된 입력을 한 번에 처리하기도 하고. 
+			
 			//프레임 시간 계산
 			//1. 현재 시간 읽기
 			QueryPerformanceCounter(&counter);
@@ -57,6 +64,7 @@ namespace Craft
 				/ static_cast<float>(frequency.QuadPart);
 			// 고정 프레임 처리
 			if (deltaTime >= oneFrameTime) // 해당 시간이 되기까지 previous를 업데이트하지 않음.
+				//즉 프레임 시간을 제한하는 역할을 함 >> 처리 성능 향상과 일관성.
 			{
 				//게임이벤트 함수 호출
 				OnInitialized();
@@ -88,16 +96,11 @@ namespace Craft
 				{
 					mainLevel->ProcessAddAndDestroyActors();
 				}
-
-
-
-
 				//입력상태 저장
 				SavePreviousInputStates();
 				//현재 시간을 이전시간으로 저장
 				previous = current;
 			}
-
 		}
 
 		Shutdown();
@@ -117,6 +120,13 @@ namespace Craft
 	}
 	void Engine::ProcessInput()
 	{
+		assert(input && "input should not be null here.");
+		if (!input)
+		{
+			return;
+		}
+
+		input->ProcessInput();
 	}
 	void Engine::OnInitialized()
 	{
@@ -149,6 +159,13 @@ namespace Craft
 	}
 	void Engine::SavePreviousInputStates()
 	{
+		assert(input && "input should not be null here.");
+		if (!input)
+		{
+			return;
+		}
+
+		input->SavePreviousStates();
 	}
 	void Engine::Shutdown()
 	{
