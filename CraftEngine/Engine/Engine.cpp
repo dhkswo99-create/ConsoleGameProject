@@ -1,6 +1,7 @@
 ﻿#include "Engine.h"
 #include <Level/Level.h>
 #include <Input/Input.h>
+#include <Render/Renderer.h>
 
 #include <iostream>
 #include <windows.h> //언리얼에서 chrono를 사용하지 않아서 해당 라이브러리로 시계 기능을 사용하지 X
@@ -19,7 +20,9 @@ namespace Craft
 
 		//입력 개체 생성
 		input = std::make_unique<Input>();
-
+		
+		//렌더러 객체 생성 >> 원래 시점에 맞게생성하는데 간단한 예제이므로 생성자에서 생성.
+		renderer = std::make_unique<Renderer>();
 	}
 	Engine::~Engine()
 	{
@@ -156,6 +159,19 @@ namespace Craft
 	}
 	void Engine::Draw()
 	{
+		if (!mainLevel)
+		{
+			return;
+		}
+		
+		mainLevel->Draw();
+
+		if (!renderer)
+		{
+			return;
+		}
+
+		renderer->Draw();
 	}
 	void Engine::SavePreviousInputStates()
 	{

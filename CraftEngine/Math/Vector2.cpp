@@ -1,4 +1,4 @@
-#include <Math/Vector2.h>
+#include "Vector2.h"
 #include <cassert>
 
 
@@ -64,6 +64,7 @@ namespace Craft
 	}
 	bool Vector2::operator!=(const Vector2& other) const
 	{
+		//return (x != other.x) || (y != other.y);
 		return !(*this == other);
 	}
 }
