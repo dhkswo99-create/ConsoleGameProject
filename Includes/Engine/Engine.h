@@ -16,7 +16,6 @@ namespace Craft
 	// 게임 엔진의 핵심 기능 제공.
 	class CRAFT_API Engine
 	{
-		// 엔진 설정 (데이터).
 		struct Setting
 		{
 			// 목표 프레임 수 (초당 프레임).

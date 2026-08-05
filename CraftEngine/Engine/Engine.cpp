@@ -25,7 +25,9 @@ namespace Craft
 		input = std::make_unique<Input>();
 		
 		//렌더러 객체 생성 >> 원래 시점에 맞게생성하는데 간단한 예제이므로 생성자에서 생성.
-		renderer = std::make_unique<Renderer>();
+		renderer = std::make_unique<Renderer>(
+			Vector2(setting.width, setting.height)
+		);
 	}
 	Engine::~Engine()
 	{
