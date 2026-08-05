@@ -15,13 +15,13 @@ namespace Craft
 
 		//콘설 커서 안보이게 설정.
 		CONSOLE_CURSOR_INFO info;
-		GetConsoleCursorInfo( //출력 입력 오류
+		GetConsoleCursorInfo( //콘솔 정보 : 출력 입력 오류
 			GetStdHandle(STD_OUTPUT_HANDLE),
 			&info // 제대로할 땐 검증이 필요.
 		);
 		//보이기 옵션 false
 		info.bVisible = FALSE;
-		SetConsoleCursorInfo( //출력 입력 오류
+		SetConsoleCursorInfo(
 			GetStdHandle(STD_OUTPUT_HANDLE),
 			&info // 제대로할 땐 검증이 필요.
 		);
@@ -57,9 +57,9 @@ namespace Craft
 		
 		//렌더 큐에 명령 추가
 		Vector2 dV;
-		for (int ix = -2; ix <= 2; ++ix)
+		for (int ix = -1; ix <= 1; ++ix)
 		{
-			for (int iy = -2; iy <= 2; ++iy)
+			for (int iy = -1; iy <= 1; ++iy)
 			{
 				dV.x = ix; dV.y = iy;
 				command.position = position + dV;

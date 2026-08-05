@@ -17,6 +17,21 @@ void TestActor::Tick(float deltaTime)
 	// 상위 로직 호출.
 	Actor::Tick(deltaTime);
 
+	//프레임 관련 문자열
+	const int size = 256;
+	char fpsString[size] = {};
+
+	sprintf_s(
+		fpsString,
+		size,
+		"dt: %f | fps: %.1f",
+		deltaTime,
+		(1.0f) / deltaTime
+	);
+
+	//콘솔 창 이름에 값 설정
+	SetConsoleTitleA(fpsString);
+
 	// @Temp: ESC 키 종료 (임시처리).
 	if(Input::Get().GetKeyDown(VK_ESCAPE))
 	{
