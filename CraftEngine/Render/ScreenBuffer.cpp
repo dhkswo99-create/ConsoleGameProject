@@ -40,7 +40,7 @@ namespace Craft
 		assert(result == TRUE);
 
 
-		//직업 만든 콘솔의 커서 끄기
+		// 만든 콘솔의 커서 끄기
 		CONSOLE_CURSOR_INFO info;
 		GetConsoleCursorInfo(buffer, &info);
 

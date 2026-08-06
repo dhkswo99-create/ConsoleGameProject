@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <Core/Core.h>
+#include <Core/CraftObject.h>
 #include <Math/Color.h>
 #include <Math/Vector2.h>
 #include <string>
@@ -11,14 +12,11 @@ namespace Craft
 {
 	//전방선언
 	class Level;
-
-
-
-
 	//가상 공간에 배치될 모든 액터의 기본 클래스
 
-	class CRAFT_API Actor
+	class CRAFT_API Actor : public CraftObject
 	{
+		TYPE_DECLARATIONS(Actor, CraftObject)
 	public:
 		Actor(
 			const std::string& image = "",

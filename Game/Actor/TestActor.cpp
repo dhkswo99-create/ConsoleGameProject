@@ -29,6 +29,7 @@ void TestActor::Tick(float deltaTime)
 		(1.0f) / deltaTime
 	);
 
+
 	//콘솔 창 이름에 값 설정
 	SetConsoleTitleA(fpsString);
 
