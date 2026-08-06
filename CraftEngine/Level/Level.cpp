@@ -62,7 +62,8 @@ namespace Craft
 			if (actor->HasExpired())
 			{
 				iterator = actorList.erase(iterator); //지워졌을 때 해당 칸을 가리키는 이터레이터 처리
-				//위 코드가 어려운 코드.
+				//위 코드가 어려운 코드. 처리되면 컨트롤 블럭에서 참조횟수 차감
+				//-> 0이 되면 sharedptr이 메모리 해제
 				continue;
 			}
 			//다음 순번을 처리하기 위해 이터레이터(반복자, 포인터) 증가 처리.

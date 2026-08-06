@@ -20,11 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor\TestActor.cpp" />
+    <ClCompile Include="Level\GameLevel.cpp" />
     <ClCompile Include="Level\TestLevel.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor\TestActor.h" />
+    <ClInclude Include="Level\GameLevel.h" />
     <ClInclude Include="Level\TestLevel.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -139,6 +141,10 @@
     <Manifest>
       <EnableSegmentHeap>true</EnableSegmentHeap>
     </Manifest>
+    <PreBuildEvent>
+      <Command>xcopy ..\Assets\* $(OutDir)..\Assets\ /e /y /i
+</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -160,6 +166,10 @@
     <Manifest>
       <EnableSegmentHeap>true</EnableSegmentHeap>
     </Manifest>
+    <PreBuildEvent>
+      <Command>xcopy ..\Assets\* $(OutDir)..\Assets\ /e /y /i
+</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

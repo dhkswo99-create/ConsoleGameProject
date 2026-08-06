@@ -80,7 +80,7 @@ public:																\
 	}																\
 	virtual bool Is(size_t id) const override						\
 	{																\
-		return (id == TypeIdClass()) ? true : ParentType::Is(id);		\
+		return (id == TypeIdClass()) ? true : ParentType::Is(id);	\
 	}																\
 
 
