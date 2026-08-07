@@ -48,7 +48,7 @@ std::shared_ptr<T> Cast(const std::shared_ptr<U>& object)
 	}
 
 	//object의 실제 타입이 T 또는 T의 파생인지 확인 후 형변환
-	if (object->Is(T::TypeID()))
+	if (object->Is(T::TypeId()))
 	{
 		//T의 파생이라면 가벼운 형변환 -> 런타임에 검증하지 않아 상대적으로 가벼움
 		return std::static_pointer_cast<T>(object);
@@ -70,7 +70,7 @@ protected:															\
 		return reinterpret_cast<size_t>(&runTimeTypeId);				\
 	}																\
 public:																\
-	static size_t Typeid()											\
+	static size_t TypeId()											\
 	{																\
 		return Type::TypeIdClass();									\
 	}																\

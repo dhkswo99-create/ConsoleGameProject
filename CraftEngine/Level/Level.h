@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #include <Actor/Actor.h>
+#include <Core/CraftObject.h>
+
 #include <memory> // std::unique_ptr / std::shared_ptr
 #include <vector> // std:: vector 동적 배열
 
@@ -15,8 +17,12 @@ namespace Craft
 
 
 	class CRAFT_API Level
-		: public std::enable_shared_from_this<Level>
+		: public CraftObject,
+		public std::enable_shared_from_this<Level>
 	{
+		//커스텀 타입 설정
+		TYPE_DECLARATIONS(Level, CraftObject)
+
 		friend class Engine;
 
 	public:

@@ -10,6 +10,108 @@
 
 using namespace Craft;
 
+bool GameLevel::CanMove(const Craft::Vector2& playerPosition, const Craft::Vector2& nextPosition)
+{
+	//게임 클리어인 경우 처리 안함
+	if (isGameClear)
+	{
+		return false;
+	}
+
+	//이동하려는 위치에 어떤 액터가 있는지를 확인할 때 타입을 활용
+	//박스가 있을 때 로직이 더 복잡하기 때문에 이 처리를 위한 배열
+	std::vector<std::shared_ptr<Actor>> boxList;
+
+	//레벨을 순회하면서 박스 타입을 boxList에 저장
+	for (const std::shared_ptr<Actor>& actor : actorList)
+	{
+		//현재 액터가 박스 타입인지 확인.
+		if (actor->IsTypeOf<Box>())
+		{
+			boxList.emplace_back(actor);
+			continue;
+		}
+	}
+
+	//이동하려는 위치에 박스가 있는지 검증을 위한 변수
+	std::shared_ptr<Actor> boxActor = nullptr;
+	
+	//위치 값 비교를 통해 해당 위치에 박스가 있는지 확인
+	for (const std::shared_ptr<Actor>& box : boxList)
+	{
+		if (box->GetPosition() == nextPosition)
+		{
+			boxActor = box;
+			continue;
+		}
+	}
+	//#1 이동하려는 위치에 박스가 있는 경우
+	if (boxActor)
+	{
+		//방향 구하기 두 벡터 빼기 
+		Vector2  direction = nextPosition - playerPosition;
+
+		//박스가 밀리는 위치 구하기
+		//동차좌표계 -> 위치,벡터 | 아핀 변환
+		// (x, y, w ) -> x, y는 좌표값 w == 1 -> 위치, w == 0 -> 벡터
+		// w는 2진 데이터. -> 위치와 위치의 합에서 w == 2가 되므로 정의되지 않은 연산.
+		Vector2 newPosition = boxActor->GetPosition() + direction;
+
+		//박스가 밀리는 위치에 다른 박스가 있는지 확인
+		for (const std::shared_ptr<Actor>& otherBox : boxList)
+		{
+			if (otherBox == boxActor)
+			{
+				continue;
+			}
+
+			//위치 확인
+			if (otherBox->GetPosition() == newPosition)
+			{
+				return false;
+			}
+		}
+
+		//박스가 밀릴 위치가 이동 가능한지 다시 확인.
+		for (const std::shared_ptr<Actor>& actor : actorList)
+		{
+			//박스가 밀리는 위치의 액터 검색
+			if (actor->GetPosition() == newPosition)
+			{
+				//벽이면 이동 불가
+				if (actor->IsTypeOf<Wall>())
+				{
+					return false;
+				}
+
+
+				if (actor->IsTypeOf<Ground>()
+					|| actor->IsTypeOf<Target>())
+				{
+					boxActor->SetPosition(newPosition);
+
+					return true;
+				}
+			}
+		}
+	} // 박스가 있는 경우
+
+	// #2 플레이어가 이동하려는 곳에 박스가 없는 경우.
+	for (const std::shared_ptr<Actor>& actor : actorList)
+	{
+		if (actor->GetPosition() == nextPosition)
+		{
+			if (actor->IsTypeOf<Wall>())
+			{
+				return false;
+			}
+			return true; // 박스는 이미 처리됨
+		}
+	}
+
+	return false; // 예상치 못한 처리 - 이동 불가
+}
+
 void GameLevel::OnInitialized()
 {
 	//상위 개체 호출

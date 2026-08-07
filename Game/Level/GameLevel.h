@@ -6,6 +6,15 @@
 //게임 클리어 등 게임 규칙 및 전반을 관리
 class GameLevel :public Craft::Level
 {
+public:
+	//커스텀 타입 설정
+	TYPE_DECLARATIONS(GameLevel, Level)
+
+	//플레이어 이동하려는 위치가 이동 가능한지 판단해주는 함수.
+	bool CanMove(
+		const Craft::Vector2& playerPosition,
+		const Craft::Vector2& nextPosition);
+
 private:
 	//레벨 초기화 함수
 	virtual void OnInitialized() override;
