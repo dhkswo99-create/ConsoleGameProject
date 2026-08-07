@@ -1,8 +1,14 @@
-#include "GameLevel.h"
+﻿#include "GameLevel.h"
+#include <Actor/Box.h>
+#include <Actor/Ground.h>
+#include <Actor/Wall.h>
+#include <Actor/Target.h>
+#include <Actor/Player.h>
 
 #include <iostream>
 #include <cassert>
 
+using namespace Craft;
 
 void GameLevel::OnInitialized()
 {
@@ -49,7 +55,63 @@ void GameLevel::LoadMap(const std::string& filename)
 	size_t readSize = fread(buffer, sizeof(char), fileSize, file);
 	assert(readSize > 0 && "No data in the stage file.");
 
-	//TODO 읽은 데이터를 기반으로 로직 제작.
+	// 읽은 데이터를 기반으로 로직 제작
+	// 1. 화면에 액터 그리기
+	//문자열에 저장된 값을 접근할 때 사용할 인덱스.
+	int index = 0;
+	
+	//액터 생성에 사용할 위치값
+	Vector2 position;
+	while (true)
+	{
+		//종료 조건 모두 읽었는지 파악
+		if (index >= fileSize)
+		{
+			break;
+		}
+
+		//이번에 확인할 문자값
+		char mapCharacter = buffer[index];
+
+		//인덱스 증가처리
+		++index;
+
+		//현재 문자가 개행 문자라면 로직은 건더뛰고 위치값만 설정
+		if (mapCharacter == '\n')
+		{
+			position.x = 0;
+			++position.y;
+			continue;
+		}
+
+		//읽은 문자별로 처리.
+		switch (mapCharacter)
+		{
+		case '#': //벽
+			SpawnActor<Wall>(position);
+			break;
+		case '.': //땅
+			SpawnActor<Ground>(position);
+			break;
+		case 'b': //상자
+			SpawnActor<Ground>(position); //박스가 이동한 후에 바닥
+			SpawnActor<Box>(position);
+			break;
+		case 't': //타겟
+			SpawnActor<Target>(position);
+			++targetScore;
+			break;
+		case 'p': //플레이어
+			SpawnActor<Ground>(position); //플레이어가 이동한 후에 바닥
+			SpawnActor<Player>(position);
+			break;
+		}
+
+		//x위치 업데이트
+		++position.x;
+	}
+
+	// 2.
 
 
 
@@ -59,6 +121,7 @@ void GameLevel::LoadMap(const std::string& filename)
 
 	//파일 닫기
 	fclose(file);
+	file = nullptr;
 	
 }
 

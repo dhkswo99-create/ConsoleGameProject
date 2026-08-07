@@ -44,7 +44,7 @@ namespace Craft
 
 		inline std::shared_ptr<Level> GetOwner() const { return owner.lock(); }; // 오너가 없다면 null
 		//반환
-		inline void SetOwner(std::weak_p tr<Level> newOwner) { owner = newOwner; }
+		inline void SetOwner(std::weak_ptr<Level> newOwner) { owner = newOwner; }
 
 		inline Vector2 GetPosition() const { return position; }
 		void SetPosition(const Vector2& newPosition);
