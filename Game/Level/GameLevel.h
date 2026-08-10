@@ -26,6 +26,10 @@ private:
 	void LoadMap(const std::string& filename);
 
 private:
+	//점수확인함수
+	bool CheckGameClear();
+
+private:
 	//목표 점수 - 클리어 조건
 	int targetScore = 0;
 

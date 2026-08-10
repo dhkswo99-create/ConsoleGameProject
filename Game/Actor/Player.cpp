@@ -1,6 +1,8 @@
 ﻿#include "Player.h"
 #include <Input/Input.h>
 #include <Level/GameLevel.h>
+#include <Game/Game.h>
+
 #include <cassert>
 
 
@@ -25,7 +27,10 @@ void Player::Tick(float deltaTime)
 	// ESC 종료
 	if (Input::Get().GetKeyDown(VK_ESCAPE))
 	{
-		QuitGame();
+		//QuitGame();
+		//메뉴 토글
+		Game& game = dynamic_cast<Game&>(Engine::Get());
+		game.ToggleMenu();
 		return;
 	}
 

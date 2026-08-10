@@ -4,6 +4,7 @@
 #include <Actor/Wall.h>
 #include <Actor/Target.h>
 #include <Actor/Player.h>
+#include <Render/Renderer.h>
 
 #include <iostream>
 #include <cassert>
@@ -88,8 +89,12 @@ bool GameLevel::CanMove(const Craft::Vector2& playerPosition, const Craft::Vecto
 				if (actor->IsTypeOf<Ground>()
 					|| actor->IsTypeOf<Target>())
 				{
+					//박스 밀림처리 
 					boxActor->SetPosition(newPosition);
-
+					
+					//점수 확인
+					isGameClear = CheckGameClear();
+									
 					return true;
 				}
 			}
@@ -118,13 +123,22 @@ void GameLevel::OnInitialized()
 	Level::OnInitialized();
 
 	//파일을 읽어서 맵 로드
-	LoadMap("Map.txt");
+	LoadMap("Stage1.txt");
 
 }
 
 void GameLevel::Draw()
 {
 	Level::Draw();
+	
+	//게임 클리어표시
+	if (isGameClear)
+	{
+		Renderer::Get().Submit(
+			"GameClear!!",
+			Vector2(30, 0)
+		);
+	}
 }
 
 void GameLevel::LoadMap(const std::string& filename)
@@ -225,5 +239,45 @@ void GameLevel::LoadMap(const std::string& filename)
 	fclose(file);
 	file = nullptr;
 	
+}
+
+bool GameLevel::CheckGameClear()
+{
+	//점수
+	int currentScore = 0;
+
+	//하고싶은 일 : 박스가 타겟에 위치에 모두 배치되었는지 확인
+	
+	//박스 목록/ 타겟 목록 저장
+	std::vector<std::shared_ptr<Actor>> boxList;
+	std::vector<std::shared_ptr<Actor>> targetList;
+
+	//게임 레벨의 모든 액터를 순회하면서 박스와 타겟 목록에 저장
+	for (const std::shared_ptr<Actor>& actor : actorList)
+	{
+		if (actor->IsTypeOf<Box>())
+		{ //박스인 경우 목록 추가
+			boxList.emplace_back(actor);
+			continue;
+		}
+
+		if (actor->IsTypeOf<Target>())
+		{ //타겟인 경우 목록 추가
+			targetList.emplace_back(actor);
+		}
+	}
+
+	//목표 지점에 배치된 박스 수 확인
+	for (const std::shared_ptr<Actor>& box : boxList)
+	{
+		for (const std::shared_ptr<Actor>& target : targetList)
+		{
+			if (box->GetPosition() == target->GetPosition())
+			{
+				currentScore += 1;
+			}
+		}
+	}
+	return currentScore == targetScore;
 }
 
