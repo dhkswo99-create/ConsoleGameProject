@@ -1,4 +1,4 @@
-#include "EnemySpawner.h"
+﻿#include "EnemySpawner.h"
 #include <Util/Util.h>
 #include <Actor/Enemy.h>
 #include <Level/Level.h>
@@ -14,6 +14,7 @@ static std::string enemyType[] =
 	"<-=->",
 	")qOp(",
 };
+
 
 EnemySpawner::EnemySpawner()
 {

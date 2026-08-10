@@ -30,6 +30,9 @@ namespace Craft
 		virtual void Tick(float deltaTime);
 		virtual void Draw();
 
+		//충돌 이벤트 함수
+		virtual void OnCollision(const std::shared_ptr<Actor>& other);
+
 		//액터 제거 함수
 		void Destroy();
 		// 게임 엔진 종료 함수
@@ -49,6 +52,15 @@ namespace Craft
 		inline Vector2 GetPosition() const { return position; }
 		void SetPosition(const Vector2& newPosition);
 
+		//이전 위치 반환
+		inline Vector2 GetPrevioustPosition() const { return previousPosition; }
+
+		//프레임 종료 후 이전 프레임 위치 저장 함수
+		inline void SavePreviousState() { previousPosition = position; }
+
+		//너비 반환
+		inline int GetWidth() const { return width; }
+		
 	protected:
 		//BeginPlay 생에 한번만 처리
 		bool hasBeganPlay = false;
@@ -74,6 +86,9 @@ namespace Craft
 
 		//위치
 		Vector2 position;
+
+		//이전 프레임 위치
+		Vector2 previousPosition;
 	};
 
 }

@@ -37,6 +37,9 @@ namespace Craft
 		Renderer::Get().Submit(
 			image, position, color, sortingOrder);
 	}
+	void Actor::OnCollision(const std::shared_ptr<Actor>& other)
+	{
+	}
 	void Actor::Destroy()
 	{
 		hasExpired = true;
