@@ -22,6 +22,8 @@ private:
 	//이벤트 함수 오버라이드
 	virtual void Tick(float deltaTime) override;
 
+	virtual void OnCollision(const std::shared_ptr<Actor>& other) override;
+
 private:
 	//이동방향 열거형 변수
 	MoveDirection direction = MoveDirection::None;

@@ -53,13 +53,23 @@ namespace Craft
 		void SetPosition(const Vector2& newPosition);
 
 		//이전 위치 반환
-		inline Vector2 GetPrevioustPosition() const { return previousPosition; }
+		inline Vector2 GetPreviousPosition() const { return previousPosition; }
 
 		//프레임 종료 후 이전 프레임 위치 저장 함수
 		inline void SavePreviousState() { previousPosition = position; }
 
 		//너비 반환
 		inline int GetWidth() const { return width; }
+
+		//액터의 이미지 설정 함수
+		inline void ChangeImage(const std::string& newImage)
+		{
+			// 이미지 길이 설정
+			width = static_cast<int>(newImage.length());
+
+			// 새로운 글자값 설정
+			image = newImage;
+		}
 		
 	protected:
 		//BeginPlay 생에 한번만 처리

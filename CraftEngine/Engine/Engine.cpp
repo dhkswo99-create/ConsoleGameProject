@@ -2,6 +2,7 @@
 #include <Level/Level.h>
 #include <Input/Input.h>
 #include <Render/Renderer.h>
+#include <Physics/CollisionSystem.h>
 
 #include <iostream>
 #include <windows.h> //언리얼에서 chrono를 사용하지 않아서 해당 라이브러리로 시계 기능을 사용하지 X
@@ -28,6 +29,9 @@ namespace Craft
 		renderer = std::make_unique<Renderer>(
 			Vector2(setting.width, setting.height)
 		);
+
+		// 충돌 시스템 객체 생성
+		collisionSystem = std::make_unique<CollisionSystem>();
 	}
 	Engine::~Engine()
 	{
@@ -80,6 +84,8 @@ namespace Craft
 				BeginPlay();
 				//게임업데이트
 				Tick(deltaTime);
+				//충돌처리
+				ProcessCollision();
 				//화면 그리기
 				Draw();
 			
@@ -103,6 +109,7 @@ namespace Craft
 				if (mainLevel)
 				{
 					mainLevel->ProcessAddAndDestroyActors();
+					mainLevel->SavePreviousActorStates();
 				}
 				//입력상태 저장
 				SavePreviousInputStates();
@@ -177,6 +184,18 @@ namespace Craft
 		}
 
 		renderer->Draw();
+	}
+	void Engine::ProcessCollision()
+	{
+		if (!mainLevel || !collisionSystem)
+		{
+			return;
+		}
+		
+		//충돌 처리
+		//의존성 주입 -> 액터리스트를 관리할 필요 없이 받아서 사용하는 것.
+		collisionSystem->ProcessCollision(mainLevel->actorList);
+
 	}
 	void Engine::SavePreviousInputStates()
 	{

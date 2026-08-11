@@ -20,7 +20,7 @@ namespace Util
 	
 	inline float RandomRange(float min, float max)
 	{
-		std::uniform_int_distribution<float> distribution(min, max);
+		std::uniform_real_distribution<float> distribution(min, max);
 
 		return distribution(GetRandomEngine());
 	}

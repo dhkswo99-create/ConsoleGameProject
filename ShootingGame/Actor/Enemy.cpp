@@ -3,6 +3,9 @@
 #include <Util/Util.h>
 #include <Actor/EnemyBullet.h>
 #include <Level/Level.h>
+#include <Actor/Actor.h>
+#include <Actor/PlayerBullet.h>
+#include <Actor/DestroyEffect.h>
 
 using namespace Craft;
 Enemy::Enemy(const std::string& image, int yPosition)
@@ -70,5 +73,27 @@ void Enemy::Tick(float deltaTime)
 			bulletPosition,
 			Util::RandomRange(1, 20)
 		);
+	}
+}
+
+void Enemy::OnCollision(const std::shared_ptr<Actor>& other)
+{	
+	super::OnCollision(other);
+
+	//충돌한 액터가 플레이어 탄약이면 삭제
+	//커스텀 타입 활용
+	if (other->IsTypeOf<PlayerBullet>())
+	{
+		//탄약 삭제
+		other->Destroy();
+		
+		//적삭제
+		Destroy();
+
+		//적파괴 이펙트
+		if (GetOwner())
+		{
+			GetOwner()->SpawnActor<DestroyEffect>(GetPosition());
+		}
 	}
 }

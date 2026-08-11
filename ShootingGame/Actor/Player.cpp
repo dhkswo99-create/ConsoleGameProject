@@ -3,6 +3,8 @@
 #include <Input/Input.h>
 #include <Level/Level.h>
 #include <Actor/PlayerBullet.h>
+#include <Actor/EnemyBullet.h>
+#include <Actor/DestroyEffect.h>
 
 
 using namespace Craft;
@@ -78,6 +80,24 @@ void Player::Tick(float deltaTime)
 		else if (fireMode == FireMode::Repeat)
 		{
 			fireMode = FireMode::OneShot;
+		}
+	}
+}
+
+void Player::OnCollision(const std::shared_ptr<Actor>& other)
+{
+	super::OnCollision(other);
+
+	//부딪힌 액터가 적 탄약이면 처리.
+	if (other->IsTypeOf<EnemyBullet>())
+	{
+		Destroy();
+
+		other->Destroy();
+
+		if (GetOwner())
+		{
+			GetOwner()->SpawnActor<DestroyEffect>(GetPosition());
 		}
 	}
 }
