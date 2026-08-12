@@ -3,7 +3,7 @@
 using namespace Craft;
 
 PlayerBullet::PlayerBullet(const Craft::Vector2& position)
-	:Actor("@", position, Color::Blue),
+	:Actor(L"@", position, Color::Blue),
 	yPosition(static_cast<float>(position.y))
 {
 

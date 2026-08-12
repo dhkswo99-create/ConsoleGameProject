@@ -19,9 +19,10 @@ namespace Craft
 		TYPE_DECLARATIONS(Actor, CraftObject)
 	public:
 		Actor(
-			const std::string& image = "",
+			const std::wstring& image = L"",
 			const Vector2& position = Vector2::Zero,
-			Color color = Color::White
+			Color color = Color::White,
+			const Vector2& face = Vector2::Right
 		);
 		virtual ~Actor();
 
@@ -50,7 +51,10 @@ namespace Craft
 		inline void SetOwner(std::weak_ptr<Level> newOwner) { owner = newOwner; }
 
 		inline Vector2 GetPosition() const { return position; }
+
 		void SetPosition(const Vector2& newPosition);
+
+		void SetFace(const Vector2& newface);
 
 		//이전 위치 반환
 		inline Vector2 GetPreviousPosition() const { return previousPosition; }
@@ -62,10 +66,18 @@ namespace Craft
 		inline int GetWidth() const { return width; }
 
 		//액터의 이미지 설정 함수
-		inline void ChangeImage(const std::string& newImage)
+		inline void ChangeImage(const std::wstring& newImage)
 		{
 			// 이미지 길이 설정
-			width = static_cast<int>(newImage.length());
+			for (wchar_t cha : newImage)
+			{
+				++width;
+				if (cha == '\n')
+				{
+					++height;
+					width = 0;
+				}
+			}
 
 			// 새로운 글자값 설정
 			image = newImage;
@@ -83,13 +95,14 @@ namespace Craft
 		std::weak_ptr<Level> owner; //사고참조 방지.
 
 		//화면에 그릴 글자
-		std::string image;
+		std::wstring image;
 		
 		//글자 색상
 		Color color = Color::White;
 
 		//글자 길이
 		int width = 0;
+		int height = 1;
 
 		//렌더링 순서
 		int sortingOrder = 0;
@@ -99,6 +112,9 @@ namespace Craft
 
 		//이전 프레임 위치
 		Vector2 previousPosition;
+
+		//바라보는 방향
+		Vector2 face = Vector2::Zero;
 	};
 
 }

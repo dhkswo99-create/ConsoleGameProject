@@ -85,7 +85,7 @@ namespace Craft
 				//게임업데이트
 				Tick(deltaTime);
 				//충돌처리
-				ProcessCollision();
+				//ProcessCollision();
 				//화면 그리기
 				Draw();
 			

@@ -67,9 +67,9 @@ namespace Craft
 		//화면에 설정된 글자수
 		DWORD writtenCount = 0;
 
-		BOOL result = FillConsoleOutputCharacterA(
+		BOOL result = FillConsoleOutputCharacterW(
 			buffer, //WRITE 권한 필요 
-			' ',
+			L' ',
 			size.x * size.y,
 			Vector2::Zero,
 			&writtenCount
@@ -92,7 +92,7 @@ namespace Craft
 
 
 		//콘솔에 CHAR_INFO 타입으로 글자 쓰는 함수.
-		BOOL result = WriteConsoleOutputA(
+		BOOL result = WriteConsoleOutputW(
 			buffer, //WRITE 권환 필요
 			charInfo,
 			size,

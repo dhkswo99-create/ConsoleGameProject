@@ -3,7 +3,7 @@
 
 using namespace Craft;
 EnemyBullet::EnemyBullet(const Craft::Vector2& position, float moveSpeed)
-	: Actor("#", position, Color::Red),
+	: Actor(L"#", position, Color::Red),
 	moveSpeed(moveSpeed), yPosition(static_cast<float>(position.y))
 {
 
@@ -22,7 +22,7 @@ void EnemyBullet::Tick(float deltaTime)
 		Destroy();
 	}
 
-	//위치 설ㅈ어
+	//위치 설정
 	SetPosition(Vector2(
 		GetPosition().x, static_cast<int>(yPosition))
 	);

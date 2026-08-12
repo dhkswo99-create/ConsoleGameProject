@@ -8,7 +8,7 @@ using namespace Craft;
 //생성할 적 이미지 타입 배열
 static std::string enemyType[] =
 {
-	";:^:;",
+	"ㄱ\n:^:\n  ㄴ",
 	"zZwZz",
 	"oO@Oo",
 	"<-=->",

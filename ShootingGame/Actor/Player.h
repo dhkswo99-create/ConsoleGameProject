@@ -20,7 +20,7 @@ public:
 private:
 	virtual void Tick(float deltaTime) override;
 
-	//충돌 이벤트 함수오버라읻
+	//충돌 이벤트 함수오버라이드
 	virtual void OnCollision(const std::shared_ptr<Actor>& other) override;
 
 	void Move(float direction, float deltaTime);

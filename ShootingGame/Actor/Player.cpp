@@ -10,7 +10,7 @@
 using namespace Craft;
 
 Player::Player()
-	: Actor("<=A=>", Vector2::Zero, Color::Green),
+	: Actor(L"<\nA\n>", Vector2::Zero, Color::Green),
 	fireMode(FireMode::OneShot)
 {
 	//생성위치 설정
@@ -21,7 +21,7 @@ Player::Player()
 	// x위치 저장
 	xPosition = static_cast<float>(x);
 
-	//연사 타이머 시간 설정
+	//연사 타이머 시간 설정 
 	timer.SetTargetTime(fireInterval);
 }
 
@@ -36,6 +36,7 @@ void Player::Tick(float deltaTime)
 	{
 		QuitGame();
 	}
+
 
 	//이동 오른쪽 1 | 왼쪽 -1
 	float direction = 0.0f;

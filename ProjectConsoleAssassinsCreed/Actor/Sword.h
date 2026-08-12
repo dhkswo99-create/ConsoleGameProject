@@ -1,25 +1,24 @@
-﻿#pragma once
+#pragma once
 
-#include <Actor/Actor.h>
-#include <Util/Timer.h>
+#include <Actor/ACTOR.H>
 
-class DestroyEffect : public Craft::Actor
+using namespace Craft;
+class Sword : public Actor
 {
-	// 커스텀 RTTI 등록.
-	TYPE_DECLARATIONS(DestroyEffect, Actor)
+	TYPE_DECLARATIONS(Sword, Actor)
 
-		// 애니메이션 이펙트 프레임 구조체.
-		struct EffectFrame
+	struct SwordFrame
 	{
-		EffectFrame(
+		SwordFrame(
 			const std::wstring& frame, //글자값
 			float playTime = 0.05f, //유지 시간
+			Vector2 direction = Vector2::Right,
 			Craft::Color color = Craft::Color::Red) //색상
 			: frame(frame), playTime(playTime), color(color)
 		{
 		}
 
-		~EffectFrame() = default;
+		~SwordFrame() = default;
 
 		// 문자열 변수 (화면에 보여줄 문자열).
 		std::wstring frame;
@@ -27,22 +26,23 @@ class DestroyEffect : public Craft::Actor
 		// 재생 시간.
 		float playTime = 0.0f;
 
+		// 방향
+		Vector2 direction = Vector2::Zero;
+
 		// 색상.
 		Craft::Color color = Craft::Color::White;
 	};
 
 public:
-
-	// 위치를 전달받아 생성 가능하도록 생성자 구성.
-	DestroyEffect(const Craft::Vector2& position);
-	~DestroyEffect() = default;
+	Sword(const Vector2& position, const Vector2& direction);
+	~Sword() = default;
 
 private:
-	// 효과 재생을 위한 Tick 이벤트 함수 오버라이드.
 	virtual void Tick(float deltaTime) override;
 
 private:
-
+	Vector2 direction = Vector2::Right;
+	
 	// 시퀀스 문자열 수(배열 원소 수).
 	int effectSequenceCount = 0;
 
@@ -53,3 +53,4 @@ private:
 	// 시퀀스 사이에 시간 계산용.
 	Timer timer;
 };
+

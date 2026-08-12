@@ -35,7 +35,7 @@ namespace Craft
 		struct RenderCommand //내부에서만 사용할 목적이므로 밖으로 내보낼 필요가 없음.
 		{
 			//화면에 그릴 문자값.
-			std::string image;
+			std::wstring image;
 			
 			//위치
 			Vector2 position = Vector2::Zero;
@@ -45,6 +45,9 @@ namespace Craft
 
 			//그리기 정렬 순서 값이 크면 우선 순위가 높음.
 			int sortingOrder = -1; // << 경쟁 상황에서 우선 순위를 결정할 때 사용.
+
+			//플레이어 방향
+			Vector2 face = Vector2::Right;
 		};
 
 	public:
@@ -53,11 +56,17 @@ namespace Craft
 
 		//화면에 그릴 데이터를 제출하는 함수.
 		void Submit(
-			const std::string& image,
+			const std::wstring& image,
 			const Vector2& position,
 			Color color = Color::White,
-			int sortingOrder = 0
+			int sortingOrder = 0,
+			const Vector2& face = Vector2::Right
 		);
+
+		inline void SetViewPosition(const Vector2& position) 
+		{
+			viewPosition = position;
+		}
 
 		// Draw 이벤트 함수 -Engine에서 호출
 		void Draw();
@@ -65,6 +74,7 @@ namespace Craft
 		//전역 접근 함수
 		static Renderer& Get();
 
+		void SetFaceRenderer(const Vector2& newface) { this->face = newface; }
 
 	private:
 		//그리기 작업을 시작할 때 프레임(화면)을 지우는 함수.
@@ -79,10 +89,20 @@ namespace Craft
 		//게터 
 		const ScreenBuffer* const GetCurrentBuffer() const;
 
+
 	private:
+		//게임 영역 구분 변수
+		Vector2 gameViewStart = Vector2(1, 1);
+		//Vector2 gameViewEnd = Vector2(60, 49);  
+
 		//전역 접근 가능하도록 변수 선언
 		static Renderer* instance;
-		
+
+		//카메라 좌표
+		Vector2 viewPosition = Vector2::Zero;
+
+		//객체 바라보는 방향
+		Vector2 face = Vector2::Right;
 		
 		//이번프레임에 그릴 렌더 명령을 모아두는 배열
 		//큐처럼 사용.

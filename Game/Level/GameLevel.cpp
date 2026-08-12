@@ -135,7 +135,7 @@ void GameLevel::Draw()
 	if (isGameClear)
 	{
 		Renderer::Get().Submit(
-			"GameClear!!",
+			L"GameClear!!",
 			Vector2(30, 0)
 		);
 	}

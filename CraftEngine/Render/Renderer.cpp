@@ -76,24 +76,64 @@ namespace Craft
 
 	}
 
+	
 	void Renderer::Submit(
-		const std::string& image,
-		const Vector2& position, 
-		Color color, 
-		int sortingOrder)
+		const std::wstring& image,
+		const Vector2& position,
+		Color color,
+		int sortingOrder,
+		const Vector2& face
+	)
 	{
-		//렌더 명령 생성 및 값 설정.
+		//시야 보정 
+		int width = 45;
+		int height = 13;
+		int faceCheck = face.x * 3 + face.y;
+		switch (faceCheck)
+		{
+		case 1: //하단
+			height -= 5;
+			break;
+		case 2: //우상단
+			width -= 3;
+			height += 3;
+			break;
+		case 3: //우
+			width -= 5;
+			break;
+		case 4: //우하단
+			width -= 3;
+			height -= 3;
+			break;
+		case -1: //상단
+			height += 5;
+			break;
+		case -2: //좌하단
+			width += 3;
+			height -= 3;
+			break;
+		case -3: //좌
+			width += 5;
+			break;
+		case -4: //좌상단
+			width += 3;
+			height += 3;
+			break;
+		}
+		//viewPosition -> 플레이어 중심으로 렌더링
+		Vector2 view;
+		view.x = width;
+		view.y = height;
 		RenderCommand command;
 		command.image = image;
-		command.position = position;
+		command.position =
+			position
+			- viewPosition + view
+			+ gameViewStart;
 		command.color = color;
 		command.sortingOrder = sortingOrder;
-		
-		//렌더 큐에 명령 추가
+		command.face = face;
 		renderQueue.emplace_back(command);
-		// << 모아서 한 번에 처리하는 게 유리 
-		// 그 때 그 때 처리하는 것보다.
-
 	}
 
 	void Renderer::Draw()
@@ -129,10 +169,24 @@ namespace Craft
 		//렌더 큐 순회하면서 그리기 명령 실행
 		for (const RenderCommand& command : renderQueue)
 		{
-			//그릴 문자값이 없으면 건너뛰기 // 너비는 length 높이는 1로설정 
+			//그릴 문자값이 없으면 건너뛰기 // 너비는 width 높이는 height로 설정 
 			if (command.image.empty())
 			{
 				continue;
+			}
+
+			int width = 0;
+			int height = 1;
+
+			for ( wchar_t cha : command.image )
+			{
+				if (cha == '\0') break;
+				++width;
+				if (cha == '\n')
+				{
+					++height;
+					width = 0;
+				}
 			}
 
 			//y위치가 화면을 벗어났으면 건너뛰기
@@ -142,33 +196,46 @@ namespace Craft
 				continue;
 			}
 
-			//그리려는 문자열 길이 값.
-			const int length = static_cast<int>(command.image.length());
+			//그리려는 문자열 값
+			//const int length = static_cast<int>(command.image.length()); todo 필요한지 확인
 
 			//글자의 시작 위치
 			const int startX = command.position.x;
+			const int startY = command.position.y;
+
 
 			//글자의 끝 위치
-			const int endX = startX + length - 1;
+			const int endX = startX + width - 1;
+			const int endY = startY + height - 1;
 
-			//x 위치가 화면을 벗어났는지 확인
-			if (endX < 0 || startX >= screenSize.x)
+			// 위치가 화면을 벗어났는지 확인
+			if (endX < 0 || startX >= screenSize.x
+				|| endY < 0 || startY >= screenSize.y)
 			{
 				continue;
 			}
 
-			//실제 그릴 글자의 위치 구하기
+			//실제 그릴 글자의 위치 구하기 화면 위치
 			const int visibleStartX = startX < 0 ? 0 : startX;
-			const int visibleEnd = endX >= screenSize.x ? screenSize.x - 1 : endX;
+			const int visibleEndX = endX >= screenSize.x ? screenSize.x - 1 : endX;
+			const int visibleStartY = startY < 0 ? 0 : startY;
+			const int visibleEndY = endY >= screenSize.y ? screenSize.y - 1 : endY;
 
 			//루프 순회하면서 글자를 2차원 배열에 하나씩 기록
-			for (int x = visibleStartX; x <= visibleEnd; ++x)
+			for (int x = visibleStartX; x < startX +
+				static_cast<int>(command.image.length()); ++x)
 			{
 				// 문자열에서 글자값을 가져올 때 사용할 인덱스
 				const int sourceIndex = x - startX;
+				if (command.image[sourceIndex] == '\n') continue;
 
-				//글자 2차원 배열 인덱스
-				const int index = (command.position.y * screenSize.x) + x;
+				//글자 2차원 배열 인덱스 //찍히는 위치. 
+				int realX = sourceIndex % width;
+				int realY = sourceIndex / width;
+
+
+				const int index = ( ( command.position.y + realY ) * screenSize.x) 
+					+ command.position.x + realX;
 
 				//정렬 우선 순위를 비교해서 그릴지 말지 판정
 				//지금 설정은 덮어쓰기 동일 우선 순위시
@@ -178,10 +245,10 @@ namespace Craft
 				}
 
 				//2차원 배열에 글자, 속성 설정 
-				frame->charInfoArray[index].Char.AsciiChar
+				frame->charInfoArray[index].Char.UnicodeChar
 					= command.image[sourceIndex];
 				
-				//글자 색상 값 설정
+				//글자 색상 값 설정s
 				frame->charInfoArray[index].Attributes
 					= static_cast<DWORD>(command.color);
 

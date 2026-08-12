@@ -5,11 +5,14 @@
 namespace Craft
 {
 	Actor::Actor(
-		const std::string& image,
+		const std::wstring& image,
 		const Vector2& position,
-		Color color)
+		Color color,
+		const Vector2& face		
+	)
 		: image(image), position(position), color(color),
-		width(static_cast<int>(image.length()))
+		width(static_cast<int>(image.length())),
+		face(face)
 	{
 
 	}
@@ -35,7 +38,7 @@ namespace Craft
 
 		//렌더러에 필요한 데이터 제출.
 		Renderer::Get().Submit(
-			image, position, color, sortingOrder);
+			image, position, color, sortingOrder, face);
 	}
 	void Actor::OnCollision(const std::shared_ptr<Actor>& other)
 	{
@@ -57,5 +60,13 @@ namespace Craft
 			return;
 		}
 		position = newPosition; //연산자 모두 오버로딩한 연산자.
+	}
+	void Actor::SetFace(const Vector2& newface)
+	{
+		if (face == newface)
+		{
+			return;
+		}
+		Renderer::Get().SetFaceRenderer(newface);
 	}
 }

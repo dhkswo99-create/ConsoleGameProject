@@ -9,7 +9,7 @@
 using namespace Craft;
 
 Player::Player(const Vector2& position)
-	: super("P", position, Color::Green) // super -> Actor 부모클래스 가리킴.
+	: super(L"P", position, Color::Green) // super -> Actor 부모클래스 가리킴.
 {
 	//그리기 우선순위 지정
 	//박스는 이동이 가능하기 때문에 땅과 겹칠 수 있음
