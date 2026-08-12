@@ -82,13 +82,13 @@ namespace Craft
 		const Vector2& position,
 		Color color,
 		int sortingOrder,
-		const Vector2& face
+		const Vector2& Playerface
 	)
 	{
 		//시야 보정 
+		int faceCheck = Playerface.x * 3 + Playerface .y;
 		int width = 45;
 		int height = 13;
-		int faceCheck = face.x * 3 + face.y;
 		switch (faceCheck)
 		{
 		case 1: //하단
@@ -128,11 +128,10 @@ namespace Craft
 		command.image = image;
 		command.position =
 			position
-			- viewPosition + view
-			+ gameViewStart;
+			- viewPosition 
+			+ view;
 		command.color = color;
 		command.sortingOrder = sortingOrder;
-		command.face = face;
 		renderQueue.emplace_back(command);
 	}
 

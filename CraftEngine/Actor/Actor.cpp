@@ -2,17 +2,16 @@
 #include <Engine/Engine.h>
 #include <Render/Renderer.h>
 
+Craft::Vector2 playerFace = Craft::Vector2::Zero;
 namespace Craft
 {
 	Actor::Actor(
 		const std::wstring& image,
 		const Vector2& position,
-		Color color,
-		const Vector2& face		
+		Color color	
 	)
 		: image(image), position(position), color(color),
-		width(static_cast<int>(image.length())),
-		face(face)
+		width(static_cast<int>(image.length()))
 	{
 
 	}
@@ -38,7 +37,7 @@ namespace Craft
 
 		//렌더러에 필요한 데이터 제출.
 		Renderer::Get().Submit(
-			image, position, color, sortingOrder, face);
+			image, position, color, sortingOrder);
 	}
 	void Actor::OnCollision(const std::shared_ptr<Actor>& other)
 	{
@@ -61,12 +60,12 @@ namespace Craft
 		}
 		position = newPosition; //연산자 모두 오버로딩한 연산자.
 	}
-	void Actor::SetFace(const Vector2& newface)
+	void Actor::SetPlayerFace(const Vector2& newface)
 	{
-		if (face == newface)
+		if (playerFace == newface)
 		{
 			return;
 		}
-		Renderer::Get().SetFaceRenderer(newface);
+		playerFace = newface;
 	}
 }

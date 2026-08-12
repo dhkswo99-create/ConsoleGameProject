@@ -7,7 +7,6 @@
 #include <string>
 #include <memory> // std:: weak_ptr 사용
 
-
 namespace Craft
 {
 	//전방선언
@@ -21,8 +20,7 @@ namespace Craft
 		Actor(
 			const std::wstring& image = L"",
 			const Vector2& position = Vector2::Zero,
-			Color color = Color::White,
-			const Vector2& face = Vector2::Right
+			Color color = Color::White
 		);
 		virtual ~Actor();
 
@@ -54,7 +52,7 @@ namespace Craft
 
 		void SetPosition(const Vector2& newPosition);
 
-		void SetFace(const Vector2& newface);
+		void SetPlayerFace(const Vector2& newface);
 
 		//이전 위치 반환
 		inline Vector2 GetPreviousPosition() const { return previousPosition; }
@@ -114,7 +112,7 @@ namespace Craft
 		Vector2 previousPosition;
 
 		//바라보는 방향
-		Vector2 face = Vector2::Zero;
+		static Vector2 playerFace;
 	};
 
 }

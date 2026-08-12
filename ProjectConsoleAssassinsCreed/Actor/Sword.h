@@ -12,7 +12,7 @@ class Sword : public Actor
 		SwordFrame(
 			const std::wstring& frame, //글자값
 			float playTime = 0.05f, //유지 시간
-			Vector2 direction = Vector2::Right,
+			Vector2 direction = Vector2::Zero,
 			Craft::Color color = Craft::Color::Red) //색상
 			: frame(frame), playTime(playTime), color(color)
 		{
