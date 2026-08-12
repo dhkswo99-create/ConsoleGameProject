@@ -16,7 +16,7 @@ class Enemy : public Craft::Actor
 	};
 
 public:
-	Enemy(const std::string& image = "(oOo)", int yPosition = 5);
+	Enemy(const std::wstring& image = L"(oOo)", int yPosition = 5);
 
 private:
 	//이벤트 함수 오버라이드

@@ -1,4 +1,6 @@
 #include "Enemy.h"
+#include "Enemy.h"
+#include "Enemy.h"
 #include <Engine/Engine.h>
 #include <Util/Util.h>
 #include <Actor/EnemyBullet.h>
@@ -8,7 +10,7 @@
 #include <Actor/DestroyEffect.h>
 
 using namespace Craft;
-Enemy::Enemy(const std::string& image, int yPosition)
+Enemy::Enemy(const std::wstring& image, int yPosition)
 	: Actor(image)
 {
 	//랜덤 

@@ -85,51 +85,12 @@ namespace Craft
 		const Vector2& Playerface
 	)
 	{
-		//시야 보정 
-		int faceCheck = Playerface.x * 3 + Playerface .y;
-		int width = 45;
-		int height = 13;
-		switch (faceCheck)
-		{
-		case 1: //하단
-			height -= 5;
-			break;
-		case 2: //우상단
-			width -= 3;
-			height += 3;
-			break;
-		case 3: //우
-			width -= 5;
-			break;
-		case 4: //우하단
-			width -= 3;
-			height -= 3;
-			break;
-		case -1: //상단
-			height += 5;
-			break;
-		case -2: //좌하단
-			width += 3;
-			height -= 3;
-			break;
-		case -3: //좌
-			width += 5;
-			break;
-		case -4: //좌상단
-			width += 3;
-			height += 3;
-			break;
-		}
 		//viewPosition -> 플레이어 중심으로 렌더링
-		Vector2 view;
-		view.x = width;
-		view.y = height;
 		RenderCommand command;
 		command.image = image;
 		command.position =
 			position
-			- viewPosition 
-			+ view;
+			- cameraView;
 		command.color = color;
 		command.sortingOrder = sortingOrder;
 		renderQueue.emplace_back(command);

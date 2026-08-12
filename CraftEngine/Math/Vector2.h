@@ -36,6 +36,7 @@ namespace Craft
 		static Vector2 Zero;
 		static Vector2 One;
 		static Vector2 Right;
+		static Vector2 Left;
 		static Vector2 Up; //(0, -1)
 
 

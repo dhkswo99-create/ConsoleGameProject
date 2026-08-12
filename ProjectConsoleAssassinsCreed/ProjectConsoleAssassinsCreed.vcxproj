@@ -100,8 +100,10 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Actor\Camera.cpp" />
+    <ClCompile Include="Actor\Enemy\Enemy.cpp" />
     <ClCompile Include="Actor\Ground.cpp" />
-    <ClCompile Include="Actor\Guard.cpp" />
+    <ClCompile Include="Actor\Enemy\Guard.cpp" />
     <ClCompile Include="Actor\Player.cpp" />
     <ClCompile Include="Actor\Sword.cpp" />
     <ClCompile Include="Actor\Wall.cpp" />
@@ -112,8 +114,10 @@
     <ClCompile Include="Util\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Actor\Camera.h" />
+    <ClInclude Include="Actor\Enemy\Enemy.h" />
     <ClInclude Include="Actor\Ground.h" />
-    <ClInclude Include="Actor\Guard.h" />
+    <ClInclude Include="Actor\Enemy\Guard.h" />
     <ClInclude Include="Actor\Player.h" />
     <ClInclude Include="Actor\Sword.h" />
     <ClInclude Include="Actor\Wall.h" />

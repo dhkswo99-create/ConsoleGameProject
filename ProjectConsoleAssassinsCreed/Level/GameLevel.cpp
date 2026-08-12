@@ -1,8 +1,10 @@
 ﻿#include "GameLevel.h"
 #include <Actor/Wall.h>
 #include <Actor/Ground.h>
+#include <Actor/Enemy/Guard.h>
 //#include <Actor/Target.h>
 #include <Actor/Player.h>
+#include <Actor/Camera.h>
 #include <Render/Renderer.h>
 
 #include <iostream>
@@ -33,6 +35,31 @@ bool GameLevel::CanMove(const Craft::Vector2& playerPosition, const Craft::Vecto
 
 	return false; // 예상치 못한 처리 - 이동 불가
 }
+
+bool GameLevel::CanAttack(const Craft::Vector2& playerPosition, const Craft::Vector2& face)
+{
+	if (isGameClear)
+	{
+		return false;
+	}
+	//공격하려는 곳이 벽인 경우
+	for (const std::shared_ptr<Actor>& actor : actorList)
+	{
+		if (actor->GetPosition() == (playerPosition + face))
+		{
+			if (actor->IsTypeOf<Wall>())
+			{
+				return false;
+			}
+			return true;
+		}
+	}
+
+
+	return false;
+}
+
+
 
 void GameLevel::OnInitialized()
 {
@@ -105,7 +132,14 @@ void GameLevel::LoadMap(const std::string& filename)
 
 		//이번에 확인할 문자값
 		char mapCharacter = buffer[index];
-
+		if (mapCharacter == '#')
+		{
+			map[position.y].emplace_back(1);
+		}
+		else
+		{
+			map[position.y].emplace_back(0);
+		}
 		//인덱스 증가처리
 		++index;
 
@@ -126,6 +160,9 @@ void GameLevel::LoadMap(const std::string& filename)
 		case '.': //땅
 			SpawnActor<Ground>(position);
 			break;
+		case 'g': //땅
+			SpawnActor<Guard>(position);
+			break;
 		//case 'b': //상자
 		//	SpawnActor<Ground>(position); //박스가 이동한 후에 바닥
 		//	SpawnActor<Box>(position);
@@ -136,6 +173,7 @@ void GameLevel::LoadMap(const std::string& filename)
 		//	break;
 		case 'p': //플레이어
 			SpawnActor<Ground>(position); //플레이어가 이동한 후에 바닥
+			SpawnActor<Camera>();
 			SpawnActor<Player>(position);
 			break;
 		}
@@ -143,8 +181,6 @@ void GameLevel::LoadMap(const std::string& filename)
 		//x위치 업데이트
 		++position.x;
 	}
-
-	// 2.
 
 
 

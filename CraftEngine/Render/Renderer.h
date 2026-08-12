@@ -57,12 +57,22 @@ namespace Craft
 			const Vector2& position,
 			Color color = Color::White,
 			int sortingOrder = 0,
-			const Vector2& Playerface = Vector2::Zero
+			const Vector2& playerFace = Vector2::Zero
 		);
+		
+		inline void SetFaceRender(const Vector2& newplayerFace) 
+		{ 
+			playerFace = newplayerFace;
+		}
 
-		inline void SetViewPosition(const Vector2& position) 
+		inline void SetPlayerPosition(const Vector2& position) 
 		{
-			viewPosition = position;
+			playerPosition = position;
+		}
+
+		inline void SetCameraView(const Vector2& newCameraView) 
+		{
+			cameraView = newCameraView;
 		}
 
 		// Draw 이벤트 함수 -Engine에서 호출
@@ -70,6 +80,9 @@ namespace Craft
 
 		//전역 접근 함수
 		static Renderer& Get();
+
+		inline Vector2 GetPlayerPosition() { return playerPosition; }
+		inline Vector2 GetPlayerFace() { return playerFace; }
 
 	private:
 		//그리기 작업을 시작할 때 프레임(화면)을 지우는 함수.
@@ -86,15 +99,17 @@ namespace Craft
 
 
 	private:
-		//게임 영역 구분 변수
-		Vector2 gameViewStart = Vector2(1, 1);
-		//Vector2 gameViewEnd = Vector2(60, 49);  
-
 		//전역 접근 가능하도록 변수 선언
 		static Renderer* instance;
 
-		//카메라 좌표
-		Vector2 viewPosition = Vector2::Zero;
+		// 카메라
+		Vector2 cameraView = Vector2::Zero;
+
+		// 플레이어 좌표
+		Vector2 playerPosition = Vector2::Zero;
+
+		// 방향
+		Vector2 playerFace = Vector2::Zero;
 		
 		//이번프레임에 그릴 렌더 명령을 모아두는 배열
 		//큐처럼 사용.

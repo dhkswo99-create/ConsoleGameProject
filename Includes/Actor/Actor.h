@@ -110,9 +110,6 @@ namespace Craft
 
 		//이전 프레임 위치
 		Vector2 previousPosition;
-
-		//바라보는 방향
-		static Vector2 playerFace;
 	};
 
 }

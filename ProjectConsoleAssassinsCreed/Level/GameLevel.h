@@ -10,10 +10,17 @@ public:
 	//커스텀 타입 설정
 	TYPE_DECLARATIONS(GameLevel, Level)
 
-	//플레이어 이동하려는 위치가 이동 가능한지 판단해주는 함수.
+		//플레이어 이동하려는 위치가 이동 가능한지 판단해주는 함수.
 	bool CanMove(
 		const Craft::Vector2& playerPosition,
-		const Craft::Vector2& nextPosition);
+		const Craft::Vector2& nextPosition
+	);
+	bool CanAttack(
+		const Craft::Vector2& playerPosition,
+		const Craft::Vector2& face
+	);
+
+	std::vector<std::vector<int>> GetMap() { return map; }
 
 private:
 	//레벨 초기화 함수
@@ -36,8 +43,7 @@ private:
 	//게임 클리어 여부 플래그
 	bool isGameClear = false;
 
-
-
+	std::vector<std::vector<int>> map;
 };
 
 

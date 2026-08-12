@@ -32,7 +32,6 @@ void Player::Tick(float deltaTime)
 		(1.0f) / deltaTime
 	);
 
-
 	//콘솔 창 이름에 값 설정
 	SetConsoleTitleA(fpsString);
 
@@ -46,7 +45,8 @@ void Player::Tick(float deltaTime)
 		return;
 	}
 
-	timer.Tick(deltaTime);
+	delay.Tick(deltaTime);
+	buff.Tick(deltaTime);
 	//ESC 종료
 	if (Input::Get().GetKeyDown(VK_ESCAPE))
 	{
@@ -57,7 +57,6 @@ void Player::Tick(float deltaTime)
 	//이동 오른쪽 1 | 왼쪽 -1
 	float directionX = 0.0f;
 	float directionY = 0.0f;
-
 
 	if (Input::Get().GetKey(VK_RIGHT))
 	{
@@ -75,70 +74,120 @@ void Player::Tick(float deltaTime)
 	{
 		directionY = -1.0f;
 	}
-	if (Input::Get().GetKeyDown('D') || Input::Get().GetKeyDown('d'))
-	{
-		this->image = L"→";
-		face.x = 1;
-		if (Input::Get().GetKey('w') || Input::Get().GetKey('W'))
-		{
-			this->image = L"↗";
-		}
-		if (Input::Get().GetKey('s') || Input::Get().GetKey('S'))
-		{
-			this->image = L"↘";
-		}
-	}
-	if (Input::Get().GetKeyDown('A') || Input::Get().GetKeyDown('a'))
-	{
-		this->image = L"←";
-		face.x = -1;
-		if (Input::Get().GetKey('w') || Input::Get().GetKey('W'))
-		{
-			this->image = L"↖";
-		}
-		if (Input::Get().GetKey('s') || Input::Get().GetKey('S'))
-		{
-			this->image = L"↙";
-		}
-	}
-	if (Input::Get().GetKeyDown('W') || Input::Get().GetKeyDown('w'))
-	{
-		this->image = L"↑";
-		face.y = -1;
-		if (Input::Get().GetKey('d') || Input::Get().GetKey('D'))
-		{
-			this->image = L"↗";
-		}
-		if (Input::Get().GetKey('a') || Input::Get().GetKey('A'))
-		{
-			this->image = L"↖";
-		}
-	}
-	if (Input::Get().GetKeyDown('S') || Input::Get().GetKeyDown('s'))
-	{
-		this->image = L"↓";
-		face.y = 1;
-		if (Input::Get().GetKey('a') || Input::Get().GetKey('A'))
-		{
-			this->image = L"↙";
-		}
-		if (Input::Get().GetKey('d') || Input::Get().GetKey('D'))
-		{
-			this->image = L"↘";
-		}
-	}
-
-	
-	SetFace(face);
-	Renderer::Get().SetViewPosition(position);
-	Move(directionX, directionY , deltaTime);
-	
 
 	if (Input::Get().GetKeyDown(VK_SPACE))
 	{
-		//Attack(face, deltaTime);
+		doAttack = true;
 	}
 
+	if (Input::Get().GetKeyDown(VK_CONTROL))
+	{
+		buff.SetTargetTime(buffDuration);
+		buff.Reset();
+		moveSpeed = 200.0f;
+	}
+	if (buff.IsTimeOut())
+	{
+		moveSpeed = 50.0f;
+	}
+
+	// 선딜레이
+	if (doAttack)
+	{
+		delay.SetTargetTime(castDelay);
+		if (delay.IsTimeOut())
+		{
+			Attack(range, face, deltaTime);
+			doneAttack = false;
+			doAttack = false;
+			delay.Reset();
+		}
+	}
+
+	//후딜레이
+	if (!doneAttack)
+	{
+		delay.SetTargetTime(attackDelay);
+		if (delay.IsTimeOut())
+		{
+			delay.SetTargetTime(0);
+			doneAttack = true;
+		}
+	}
+
+	if (doneAttack && !doAttack)
+	{
+		if (Input::Get().GetKeyDown('D') || Input::Get().GetKeyDown('d'))
+	{
+		this->image = L"→";
+		face.x = 1;
+		face.y = 0;
+		if (Input::Get().GetKey('w') || Input::Get().GetKey('W'))
+		{
+			this->image = L"↗";
+			face.y = -1;
+		}
+		if (Input::Get().GetKey('s') || Input::Get().GetKey('S'))
+		{
+			this->image = L"↘";
+			face.y = 1;
+		}
+		
+	}
+		if (Input::Get().GetKeyDown('A') || Input::Get().GetKeyDown('a'))
+	{
+		this->image = L"←";
+		face.x = -1;
+		face.y = 0;
+		if (Input::Get().GetKey('w') || Input::Get().GetKey('W'))
+		{
+			this->image = L"↖";
+			face.y = -1;
+		}
+		if (Input::Get().GetKey('s') || Input::Get().GetKey('S'))
+		{
+			this->image = L"↙";
+			face.y = 1;
+		}
+	}
+		if (Input::Get().GetKeyDown('W') || Input::Get().GetKeyDown('w'))
+	{
+		this->image = L"↑";
+		face.y = -1;
+		face.x = 0;
+		if (Input::Get().GetKey('d') || Input::Get().GetKey('D'))
+		{
+			this->image = L"↗";
+			face.x = 1;
+		}
+		if (Input::Get().GetKey('a') || Input::Get().GetKey('A'))
+		{
+			this->image = L"↖";
+			face.x = -1;
+		}
+	}
+		if (Input::Get().GetKeyDown('S') || Input::Get().GetKeyDown('s'))
+	{
+		this->image = L"↓";
+		face.y = 1;
+		face.x = 0;
+		if (Input::Get().GetKey('a') || Input::Get().GetKey('A'))
+		{
+			this->image = L"↙";
+			face.x = -1;
+		}
+		if (Input::Get().GetKey('d') || Input::Get().GetKey('D'))
+		{
+			this->image = L"↘";
+			face.x = 1;
+		}
+	}
+
+		Renderer::Get().SetFaceRender(face);
+		Renderer::Get().SetPlayerPosition(position);
+		Move(directionX, directionY, deltaTime);
+		delay.Reset();
+	}
 }
 void Player::Move(float directionX, float directionY, float deltaTime)
 {
@@ -206,18 +255,18 @@ void Player::Move(float directionX, float directionY, float deltaTime)
 	}
 }
 
-//void Player::Attack(float directionX, float directionY, float deltaTime)
-//{
-//	Vector2 swordPosition(
-//		GetPosition().x + faceX,
-//		GetPosition().y + faceY
-//	);
-//
-//	Vector2 swordDirection(faceX, faceY);
-//
-//	std::shared_ptr<Level> owner = GetOwner();
-//	if (owner)
-//	{
-//		owner->SpawnActor<Sword>(swordPosition, swordDirection);
-//	}
-//}
+void Player::Attack(const int range, const Vector2& face, float deltaTime)
+{
+	std::shared_ptr<GameLevel> level = Cast<GameLevel>(GetOwner());
+	std::shared_ptr<Level> owner = GetOwner();
+	if (owner)
+	{
+		Vector2 	swordPath = position;
+		for (int ix = 1; ix <= range && level->CanAttack(swordPath, face); ++ix)
+		{
+			swordPath.x += face.x;
+			swordPath.y += face.y;
+			owner->SpawnActor<Sword>(swordPath);
+		}
+	}
+}

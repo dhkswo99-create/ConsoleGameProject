@@ -1,0 +1,51 @@
+#pragma once
+
+#include <Actor/ACTOR.H>
+
+using namespace Craft;
+class Enemy : public Actor
+{
+	TYPE_DECLARATIONS(Enemy, Actor)
+
+public:
+	Enemy(
+		const std::wstring& image,
+		const Vector2& position,
+		Color color
+	);
+	virtual ~Enemy() = default;
+
+	void Awake();
+
+	void Move(const Vector2& destination);
+
+	virtual void Tick(float deltaTime) override;
+	// 시야 범위 내에 Player가 발각된다면 Calling 상태로 진입
+	// 이미 Call이 호출된 상태라면 Tracking 호출
+	// 발각 위치를 갖고 간다.
+	void Calling(const Vector2& spotOfDetection);
+
+	// 모든 Enemy Awake, Move Call완료 시 caller = false;
+	void Call(const Vector2& spotOfDetection);
+
+	// 이 함수에서 Calling, Call이 호출
+	// sightDegree로 판별. 
+	void Searching();
+
+	// 3.14 = Pi; 게터 세터.
+	void SetSightDegree(float degree) { sightDegree = degree / 180 * 3.14; }
+	void SetSightRange(float newSightRange) { sightRange = newSightRange; }
+	double GetSightDegree() { return sightDegree; }
+	float GetSightRange() { return sightRange; }
+
+private:
+	//시야각
+	double sightDegree = atan(1); //45도
+	float sightRange;
+
+	bool caller = false;
+	bool sleep = true;
+
+	Vector2 face;
+};
+

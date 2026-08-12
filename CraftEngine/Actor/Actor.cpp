@@ -2,9 +2,9 @@
 #include <Engine/Engine.h>
 #include <Render/Renderer.h>
 
-Craft::Vector2 playerFace = Craft::Vector2::Zero;
 namespace Craft
 {
+	Vector2 playerFace = Vector2::Zero;
 	Actor::Actor(
 		const std::wstring& image,
 		const Vector2& position,
