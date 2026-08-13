@@ -145,8 +145,7 @@ void GameLevel::LoadMap(const std::string& filename)
 			map.emplace_back();
 			continue;
 		}
-		if (mapCharacter == '#' 
-			|| mapCharacter == 'g')
+		if (mapCharacter == '#')
 		{
 			map[position.y].emplace_back(1);
 		}
@@ -166,6 +165,7 @@ void GameLevel::LoadMap(const std::string& filename)
 			break;
 		case 'g': //땅
 			SpawnActor<Guard>(position);
+			SpawnActor<Ground>(position);
 			break;
 		//case 'b': //상자
 		//	SpawnActor<Ground>(position); //박스가 이동한 후에 바닥

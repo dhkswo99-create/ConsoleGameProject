@@ -26,7 +26,7 @@ void Enemy::Tick(float deltaTime)
 		pathDirection = FindRoute(Renderer::Get().GetPlayerPosition());
 	}
 
-	if (pathDirection.size() != 0)
+	if (moveIndex > 0)
 	{
 		Move(pathDirection[moveIndex], deltaTime);
 	}
@@ -52,13 +52,14 @@ std::vector<Vector2> Enemy::FindRoute(const Vector2& destination)
 	Vector2 Start = GetPosition();
 	Astar routeFinder(map, Start, Renderer::Get().GetPlayerPosition());
 	std::vector<Vector2> moveStack = routeFinder.AstarFinder(map, Start, destination);
-	moveIndex = 0;
+	moveIndex = moveStack.size();
 	return moveStack;
 }
 
 //틱마다 호출되고 moveSpeed에 비례해 빠르게 이동하며 한 칸마다 이동방향 갱신.
 void Enemy::Move(const Vector2& direction, float deltaTime)
 {
+	std::shared_ptr<GameLevel> level = Cast<GameLevel>(GetOwner());
 	Vector2 currentPosition = GetPosition();
 	Vector2 newPosition;
 	dx += direction.x * moveSpeed * deltaTime;
@@ -68,14 +69,9 @@ void Enemy::Move(const Vector2& direction, float deltaTime)
 	{
 		newPosition = currentPosition + direction;
 		SetPosition(newPosition);
-		if (pathDirection.size() - 1 > moveIndex)
-		{
-			++moveIndex;
-		}
-		else
-		{
-			pathDirection.clear();
-		}
+		dx = 0;
+		dy = 0;
+		--moveIndex;
 	}
 }
 

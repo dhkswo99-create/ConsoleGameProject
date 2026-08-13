@@ -50,7 +50,7 @@ private:
 
 	// moveStack 인덱스 
 	int moveIndex = 0;
-	float moveSpeed = 30.0f;
+	float moveSpeed = 3.0f;
 	//시야각
 	double sightDegree = atan(1); //45도
 	float sightRange =  10;
