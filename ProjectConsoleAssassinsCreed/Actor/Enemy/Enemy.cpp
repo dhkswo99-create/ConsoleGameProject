@@ -1,8 +1,10 @@
 ﻿#include "Enemy.h"
 #include <Level/GameLevel.h>
+#include <Actor/Enemy/Guard.h>
 #include <Util/Astar.h>
 #include <Render/Renderer.h>
 #include <Input/Input.h>
+#include <cmath>
 
 using namespace Craft;
 
@@ -23,9 +25,41 @@ void Enemy::Tick(float deltaTime)
 
 	if (Input::Get().GetKeyDown('t') || Input::Get().GetKeyDown('T'))
 	{
-		pathDirection = FindRoute(Renderer::Get().GetPlayerPosition());
+		if (this->IsTypeOf<Guard>())
+		{
+			pathDirection.clear();
+			pathDirection = FindRoute(Renderer::Get().GetPlayerPosition()); //Guard.
+		}
 	}
-
+	// Enemy 방향에 맞게 조정
+	int faceCheck = face.x * 3 + face.y;
+	switch (faceCheck)
+	{
+	case 1: //하단 ( x = 0 y = 1 ) 
+		this->image = L"↓";
+		break;
+	case 2: //우상단 ( x =1 y = -1 )
+		this->image = L"↗";
+		break;
+	case 3: //우 ( x = 1 y = 0 )
+		this->image = L"→";
+		break;
+	case 4: //우하단 ( x = 1 y = 1 )
+		this->image = L"↘";
+		break;
+	case -1: //상단
+		this->image = L"↑";
+		break;
+	case -2: //좌하단
+		this->image = L"↙";
+		break;
+	case -3: //좌
+		this->image = L"←";
+		break;
+	case -4: //좌상단
+		this->image = L"↖";
+		break;
+	}
 	if (moveIndex > 0)
 	{
 		Move(pathDirection[moveIndex], deltaTime);
@@ -68,10 +102,13 @@ void Enemy::Move(const Vector2& direction, float deltaTime)
 	if (dx > 1 || -1 > dx || dy > 1 || -1 > dy)
 	{
 		newPosition = currentPosition + direction;
-		SetPosition(newPosition);
-		dx = 0;
-		dy = 0;
-		--moveIndex;
+		if (level->CanMove(currentPosition, newPosition))
+		{
+			SetPosition(newPosition);
+			dx = 0;
+			dy = 0;
+			--moveIndex;
+		}
 	}
 }
 
@@ -84,16 +121,31 @@ void Enemy::Awake()
 // sightDegree로 판별. 
 void Enemy::Searching()
 {
-	if (!sleep)
-	{
-		return;
-	}
-
-
-
-	if (true /*찾았는지 확인하는 구문*/)
-	{
-		FindRoute(Renderer::Get().GetPlayerPosition());
-	}
-
+//	if (sleep)
+//	{
+//		return;
+//	}
+//	Vector2 playerPos = Renderer::Get().GetPlayerPosition();
+//	Vector2 myPos = GetPosition();
+//	distance = std::sqrt(
+//		std::pow(playerPos.x - myPos.x, 2)
+//		+ std::pow(playerPos.y - myPos.y, 2)
+//	);
+//	Vector2 myFace = GetFace();
+//	float innerProduct = static_cast<float>(playerPos.x * myPos.x + playerPos.y * myPos.y);
+//	float absFace = std::sqrt(
+//		std::pow(myFace.x, 2)
+//		+ std::pow(myFace.y, 2)
+//	);
+//	if (distance * absFace)
+//	{
+//		relativeAngle = acos(innerProduct / (distance * absFace));
+//	}
+//	if ( (sightRange > relativeAngle)
+//		&& ( sightDegree > relativeAngle && relativeAngle > -1 * sightDegree) ) 
+//	{
+//		pathDirection.clear();
+//		FindRoute(Renderer::Get().GetPlayerPosition());
+//	}
+//
 }

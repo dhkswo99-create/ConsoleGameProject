@@ -19,6 +19,7 @@ Astar::Astar(std::vector<std::vector<int>> map, const Vector2& startPosition, co
 std::vector<Vector2> Astar::AstarFinder(std::vector<std::vector<int>>& map, const Vector2& startPosition, const Vector2& destination)
 {
 	std::vector<Vector2> nullVector;
+	map[startPosition.x][startPosition.y] = 0;
 	if (!IsInRange(startPosition.x, startPosition.y)
 		|| !IsInRange(destination.x, destination.y)) { return nullVector;}
 

@@ -42,6 +42,9 @@ public:
 	double GetSightDegree() { return sightDegree; }
 	float GetSightRange() { return sightRange; }
 	void SetFace(const Vector2& direction) { face = direction; }
+	Vector2 GetFace() { return face; }
+	void SetDistance(float newDistance) { distance = newDistance; }
+	void SetRelativeAngle(float newRelativeAngle) { relativeAngle = newRelativeAngle; }
 
 private:
 	// 이동량 변수
@@ -54,11 +57,14 @@ private:
 	//시야각
 	double sightDegree = atan(1); //45도
 	float sightRange =  10;
+	//플레이어와의 거리 변수
+	float distance = 0;
+	double relativeAngle;
 
 	bool caller = false;
 	bool sleep = false;
 
-	Vector2 face;
+	Vector2 face = Vector2::Right;
 
 	// 게임 레벨에서 불러올 map 데이터
 	std::vector<std::vector<int>> map;
