@@ -21,7 +21,7 @@ void Enemy::Tick(float deltaTime)
 	
 	Searching();
 
-	if (Input::Get().GetKeyDown(VK_CONTROL) || Input::Get().GetKeyDown('T') || true)
+	if (Input::Get().GetKeyDown('t') || Input::Get().GetKeyDown('T'))
 	{
 		pathDirection = FindRoute(Renderer::Get().GetPlayerPosition());
 	}
@@ -52,7 +52,7 @@ std::vector<Vector2> Enemy::FindRoute(const Vector2& destination)
 	Vector2 Start = GetPosition();
 	Astar routeFinder(map, Start, Renderer::Get().GetPlayerPosition());
 	std::vector<Vector2> moveStack = routeFinder.AstarFinder(map, Start, destination);
-	moveIndex = moveStack.size();
+	moveIndex = moveStack.size() - 1;
 	return moveStack;
 }
 

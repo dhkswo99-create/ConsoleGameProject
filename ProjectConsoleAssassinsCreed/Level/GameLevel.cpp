@@ -23,13 +23,27 @@ bool GameLevel::CanMove(const Craft::Vector2& playerPosition, const Craft::Vecto
 	// 플레이어가 이동하려는 곳에 벽이 있을 경우 
 	for (const std::shared_ptr<Actor>& actor : actorList)
 	{
-		if (actor->GetPosition() == nextPosition)
+		if (actor->IsTypeOf<Player>())
 		{
-			if (actor->IsTypeOf<Wall>())
+			if (actor->GetPosition() == nextPosition)
 			{
-				return false;
+				if (actor->IsTypeOf<Wall>())
+				{
+					return false;
+				}
+				return true; // 박스는 이미 처리됨
 			}
-			return true; // 박스는 이미 처리됨
+		}
+		if (actor->IsTypeOf<Guard>())
+		{
+			if (actor->GetPosition() == nextPosition)
+			{
+				if (actor->IsTypeOf<Enemy>() || actor->IsTypeOf<Player>())
+				{
+					return false;
+				}
+				return true; // 박스는 이미 처리됨
+			}
 		}
 	}
 
