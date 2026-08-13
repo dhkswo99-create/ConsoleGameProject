@@ -45,15 +45,15 @@ public:
 
 private:
 	// 이동량 변수
-	float dx;
-	float dy;
+	float dx = 0;
+	float dy = 0;
 
 	// moveStack 인덱스 
 	int moveIndex = 0;
 	float moveSpeed = 30.0f;
 	//시야각
 	double sightDegree = atan(1); //45도
-	float sightRange;
+	float sightRange =  10;
 
 	bool caller = false;
 	bool sleep = false;

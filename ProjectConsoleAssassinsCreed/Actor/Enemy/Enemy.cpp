@@ -21,7 +21,7 @@ void Enemy::Tick(float deltaTime)
 	
 	Searching();
 
-	if (Input::Get().GetKeyDown('t') || Input::Get().GetKeyDown('T'))
+	if (Input::Get().GetKeyDown(VK_CONTROL) || Input::Get().GetKeyDown('T') || true)
 	{
 		pathDirection = FindRoute(Renderer::Get().GetPlayerPosition());
 	}
@@ -31,7 +31,7 @@ void Enemy::Tick(float deltaTime)
 		Move(pathDirection[moveIndex], deltaTime);
 	}
 }
-// 시야 범위 내에 Player가 발각된다면 Calling 상태로 진입
+// 시야 범위 내에 Player가 5발각된다면 Calling 상태로 진입
 // 이미 Call이 호출된 상태라면 Tracking 호출
 // 발각 위치를 갖고 간다.
 void Enemy::Calling(const Vector2& spotOfDetection)
