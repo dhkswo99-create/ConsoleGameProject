@@ -21,35 +21,35 @@ void Guard::Tick(float deltaTime)
 	super::Tick(deltaTime);
 }
 
-void Guard::Awake()
-{
-}
-
-void Guard::Attack(const Vector2& face, float deltaTime)
-{
-}
-
-void Guard::Move(const Vector2& destination)
-{
-}
-
-void Guard::Tracking(const Vector2& spotOfDetection)
-{
-}
-
-void Guard::Calling(const Vector2& spotOfDetection)
-{
-}
-
-void Guard::Call(const Vector2& spotOfDetection)
-{
-}
-
-void Guard::Searching()
-{
-	super::Searching();
-
-	Vector2 spotOfDetection = Vector2::Zero;
-
-	Tracking(spotOfDetection);
-}
+//void Guard::Awake()
+//{
+//}
+//
+//void Guard::Attack(const Vector2& face, float deltaTime)
+//{
+//}
+//
+//void Guard::Move(const Vector2& destination)
+//{
+//}
+//
+//void Guard::Tracking(const Vector2& spotOfDetection)
+//{
+//}
+//
+//void Guard::Calling(const Vector2& spotOfDetection)
+//{
+//}
+//
+//void Guard::Call(const Vector2& spotOfDetection)
+//{
+//}
+//
+//void Guard::Searching()
+//{
+//	super::Searching();
+//
+//	Vector2 spotOfDetection = Vector2::Zero;
+//
+//	Tracking(spotOfDetection);
+//}

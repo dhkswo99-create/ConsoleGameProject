@@ -6,7 +6,7 @@
 #include <limits>
 
 using namespace Craft;
-struct Astar
+struct CRAFT_API  Astar
 {
 public:
 	Astar(
@@ -14,7 +14,7 @@ public:
 		const Vector2& startPosition,
 		const Vector2& destination
 	);
-	~Astar();
+	~Astar() = default;
 
 	std::vector<Vector2> AstarFinder(
 		std::vector<std::vector<int>>& map,
@@ -53,7 +53,7 @@ private:
 	std::vector<std::vector<int>> map;
 	std::vector<std::vector<char>> zmap;
 	//무한
-	double INF = std::numeric_limits<double>::max();
+	double INF = std::numeric_limits<double>::infinity();
 	const Vector2 startPosition;
 	const Vector2 destination;
 };

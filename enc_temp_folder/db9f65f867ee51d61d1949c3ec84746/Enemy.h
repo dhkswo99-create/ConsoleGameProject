@@ -56,7 +56,7 @@ private:
 	float sightRange;
 
 	bool caller = false;
-	bool sleep = false;
+	bool sleep = true;
 
 	Vector2 face;
 

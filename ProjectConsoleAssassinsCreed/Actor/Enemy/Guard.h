@@ -17,33 +17,33 @@ public:
 
 	virtual void Tick(float deltaTime) override;
 
-	void Awake();
-	// 일정 범위 내 Player가 존재한다면 공격
-	// Tracking에서 호출 일정 범위 내에 있다면 공격한다.
-	void Attack(const Vector2& face,float deltaTime);
+	//void Awake();
+	//// 일정 범위 내 Player가 존재한다면 공격
+	//// Tracking에서 호출 일정 범위 내에 있다면 공격한다.
+	//void Attack(const Vector2& face,float deltaTime);
 
-	// Tracking에서 호출하여 발각 위치까지 이동한다. 
-	// swordPath 내에 있게 하는 걸 잘 모르겟음. ?ㅎㅋ
-	void Move(const Vector2& destination);
+	//// Tracking에서 호출하여 발각 위치까지 이동한다. 
+	//// swordPath 내에 있게 하는 걸 잘 모르겟음. ?ㅎㅋ
+	//void Move(const Vector2& destination);
 
-	// 정해진 시야 범위 내에 Player가 존재한다면 쫒아감.
-	// 쫓아 가는 중에 계속 갱신.
-	void Tracking(const Vector2& spotOfDetection);
+	//// 정해진 시야 범위 내에 Player가 존재한다면 쫒아감.
+	//// 쫓아 가는 중에 계속 갱신.
+	//void Tracking(const Vector2& spotOfDetection);
 
 	// 시야 범위 내에 Player가 발각된다면 Calling 상태로 진입
 	// 이미 Call이 호출된 상태라면 Tracking 호출
 	// 발각 위치를 갖고 간다.
-	void Calling(const Vector2& spotOfDetection);
+	//void Calling(const Vector2& spotOfDetection);
 
-	// 모든 Enemy Awake, Move Call완료 시 caller = false;
-	void Call(const Vector2& spotOfDetection);
+	//// 모든 Enemy Awake, Move Call완료 시 caller = false;
+	//void Call(const Vector2& spotOfDetection);
 
-	// 이 함수에서 Tracking, Calling, Call이 호출
-	// sightDegree로 판별. 
-	void Searching();
+	//// 이 함수에서 Tracking, Calling, Call이 호출
+	//// sightDegree로 판별. 
+	//void Searching();
 
-	// 3.14 = Pi; 세터
-	void SetSightDegree(double  degree) { sightDegree = (degree / 180 * 3.14); }
+	//// 3.14 = Pi; 세터
+	//void SetSightDegree(double  degree) { sightDegree = (degree / 180 * 3.14); }
 
 private:
 	//시야각
