@@ -119,6 +119,8 @@ void GameLevel::LoadMap(const std::string& filename)
 	// 1. 화면에 액터 그리기
 	//문자열에 저장된 값을 접근할 때 사용할 인덱스.
 	int index = 0;
+	map.clear();
+	map.emplace_back();
 	
 	//액터 생성에 사용할 위치값
 	Vector2 position;
@@ -132,14 +134,6 @@ void GameLevel::LoadMap(const std::string& filename)
 
 		//이번에 확인할 문자값
 		char mapCharacter = buffer[index];
-		if (mapCharacter == '#')
-		{
-			map[position.y].emplace_back(1);
-		}
-		else
-		{
-			map[position.y].emplace_back(0);
-		}
 		//인덱스 증가처리
 		++index;
 
@@ -148,7 +142,17 @@ void GameLevel::LoadMap(const std::string& filename)
 		{
 			position.x = 0;
 			++position.y;
+			map.emplace_back();
 			continue;
+		}
+		if (mapCharacter == '#' 
+			|| mapCharacter == 'g')
+		{
+			map[position.y].emplace_back(1);
+		}
+		else
+		{
+			map[position.y].emplace_back(0);
 		}
 
 		////읽은 문자별로 처리.
