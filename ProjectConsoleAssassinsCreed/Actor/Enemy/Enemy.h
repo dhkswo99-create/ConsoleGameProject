@@ -20,6 +20,8 @@ public:
 
 	void Move(const Vector2& destination, float deltaTime);
 
+	virtual void Attack(int range, const Vector2& face, float deltaTime);
+
 	virtual void Tick(float deltaTime) override;
 	
 	// 플레이어까지 향하는 경로를 리턴.
@@ -34,44 +36,53 @@ public:
 
 	// 이 함수에서 Calling, Call이 호출
 	// sightDegree로 판별. 
-	void Searching();
+	bool Searching();
 
-	// 3.14 = Pi; 게터 세터.
-	void SetSightDegree(float degree) { sightDegree = degree / 180 * 3.14; }
-	void SetSightRange(float newSightRange) { sightRange = newSightRange; }
+	// 게터
 	double GetSightDegree() { return sightDegree; }
 	float GetSightRange() { return sightRange; }
 	void SetFace(const Vector2& direction) { face = direction; }
 	Vector2 GetFace() { return face; }
+	// 세터.
+	void SetSightDegree(float degree) { sightDegree = degree; }
+	void SetSightRange(float newSightRange) { sightRange = newSightRange; }
 	void SetDistance(float newDistance) { distance = newDistance; }
 	void SetRelativeAngle(float newRelativeAngle) { relativeAngle = newRelativeAngle; }
+	bool InAttackRange() { return distance < range; }
+
+protected:
+	int range = 4;
+	float sightRange =  10;
+
+	float moveSpeed = 3.0f;
+	float distance = 0;
+	
+	bool sleep = false;
+	bool found = false;
+	
+	Vector2 face = Vector2::Right;
+
+	
+	// 최적 경로를 저장할 공간
+	// path를 하나씩 꺼내 이동하게 할 것.
+	int moveIndex = 0;
+	std::vector<Vector2> pathDirection;
 
 private:
 	// 이동량 변수
 	float dx = 0;
 	float dy = 0;
 
-	// moveStack 인덱스 
-	int moveIndex = 0;
-	float moveSpeed = 3.0f;
-	//시야각
-	double sightDegree = atan(1); //45도
-	float sightRange =  10;
 	//플레이어와의 거리 변수
-	float distance = 0;
 	double relativeAngle;
 
-	bool caller = false;
-	bool sleep = false;
+	//시야각
+	double sightDegree = 45; //45도
 
-	Vector2 face = Vector2::Right;
+	bool caller = false;
 
 	// 게임 레벨에서 불러올 map 데이터
 	std::vector<std::vector<int>> map;
-	
-	// 최적 경로를 저장할 공간
-	// path를 하나씩 꺼내 이동하게 할 것.
-	std::vector<Vector2> pathDirection;
 
 };
 

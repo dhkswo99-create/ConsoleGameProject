@@ -1,10 +1,13 @@
 ﻿#include "Enemy.h"
 #include <Level/GameLevel.h>
 #include <Actor/Enemy/Guard.h>
+#include <Actor/Enemy/Archer.h>
 #include <Util/Astar.h>
 #include <Render/Renderer.h>
 #include <Input/Input.h>
 #include <cmath>
+
+#define ANGLE 180/3.14
 
 using namespace Craft;
 
@@ -21,11 +24,24 @@ void Enemy::Tick(float deltaTime)
 {
 	super::Tick(deltaTime);
 	
-	Searching();
+	found = Searching();
 
+	if (!sleep && found)
+	{
+		pathDirection.clear();
+		if (this->IsTypeOf<Guard>())
+		{
+			pathDirection = FindRoute(Renderer::Get().GetPlayerPosition()); //Guard.
+		}
+		else if (this->IsTypeOf<Archer>())
+		{
+
+		}
+	}
+	
 	if (Input::Get().GetKeyDown('t') || Input::Get().GetKeyDown('T'))
 	{
-		if (this->IsTypeOf<Guard>())
+		if (this->IsTypeOf<Guard>() || this->IsTypeOf<Archer>())
 		{
 			pathDirection.clear();
 			pathDirection = FindRoute(Renderer::Get().GetPlayerPosition()); //Guard.
@@ -59,10 +75,6 @@ void Enemy::Tick(float deltaTime)
 	case -4: //좌상단
 		this->image = L"↖";
 		break;
-	}
-	if (moveIndex > 0)
-	{
-		Move(pathDirection[moveIndex], deltaTime);
 	}
 }
 // 시야 범위 내에 Player가 5발각된다면 Calling 상태로 진입
@@ -112,6 +124,10 @@ void Enemy::Move(const Vector2& direction, float deltaTime)
 	}
 }
 
+void Enemy::Attack(int range, const Vector2& face, float deltaTime)
+{
+}
+
 void Enemy::Awake()
 {
 	sleep = true;
@@ -119,7 +135,7 @@ void Enemy::Awake()
 
 // 이 함수에서 Calling, Call이 호출
 // sightDegree로 판별. 
-void Enemy::Searching()
+bool Enemy::Searching()
 {
 	Vector2 playerPos = Renderer::Get().GetPlayerPosition();
 	Vector2 myPos = GetPosition();
@@ -138,25 +154,21 @@ void Enemy::Searching()
 	));
 	if (distance * absFace)
 	{
-		relativeAngle = acos(innerProduct / (distance * absFace));
+		relativeAngle = acos(innerProduct / (distance * absFace)) * ANGLE;
 	}
 	else
 	{
 		relativeAngle = 0;
 	}
-	if (!sleep)
+	if ((sightRange > distance)
+		&& (sightDegree > relativeAngle && relativeAngle > -1 * sightDegree))
 	{
-		if ((sightRange > distance)
-			&& (sightDegree > relativeAngle && relativeAngle > -1 * sightDegree))
-		{
-			pathDirection.clear();
-			pathDirection = FindRoute(Renderer::Get().GetPlayerPosition());
-		}
+		return true;
 	}
 	if (sightRange / 4 > distance)
 	{
-		if(sleep) Awake();
-		pathDirection.clear();ㅇ
-		pathDirection = FindRoute(Renderer::Get().GetPlayerPosition()); //Guard.
+		if (sleep) Awake();
+		return true;
 	}
+	return false;
 }

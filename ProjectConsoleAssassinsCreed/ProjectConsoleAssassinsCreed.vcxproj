@@ -101,6 +101,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Actor\Camera.cpp" />
+    <ClCompile Include="Actor\Enemy\Archer.cpp" />
     <ClCompile Include="Actor\Enemy\Enemy.cpp" />
     <ClCompile Include="Actor\Ground.cpp" />
     <ClCompile Include="Actor\Enemy\Guard.cpp" />
@@ -115,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor\Camera.h" />
+    <ClInclude Include="Actor\Enemy\Archer.h" />
     <ClInclude Include="Actor\Enemy\Enemy.h" />
     <ClInclude Include="Actor\Ground.h" />
     <ClInclude Include="Actor\Enemy\Guard.h" />

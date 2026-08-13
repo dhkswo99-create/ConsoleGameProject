@@ -2,6 +2,7 @@
 #include <Actor/Wall.h>
 #include <Actor/Ground.h>
 #include <Actor/Enemy/Guard.h>
+#include <Actor/Enemy/Archer.h>
 //#include <Actor/Target.h>
 #include <Actor/Player.h>
 #include <Actor/Camera.h>
@@ -167,8 +168,12 @@ void GameLevel::LoadMap(const std::string& filename)
 		case '.': //땅
 			SpawnActor<Ground>(position);
 			break;
-		case 'g': //땅
+		case 'g': //경비
 			SpawnActor<Guard>(position);
+			SpawnActor<Ground>(position);
+			break;
+		case 'a': //궁수
+			SpawnActor<Archer>(position);
 			SpawnActor<Ground>(position);
 			break;
 		//case 'b': //상자

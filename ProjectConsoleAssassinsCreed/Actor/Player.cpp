@@ -75,10 +75,6 @@ void Player::Tick(float deltaTime)
 		directionY = -1.0f;
 	}
 
-	if (Input::Get().GetKeyDown(VK_SPACE))
-	{
-		doAttack = true;
-	}
 
 	if (Input::Get().GetKeyDown(VK_CONTROL))
 	{
@@ -91,6 +87,10 @@ void Player::Tick(float deltaTime)
 		moveSpeed = 50.0f;
 	}
 
+	if (Input::Get().GetKeyDown(VK_SPACE))
+	{
+		doAttack = true;
+	}
 	// 선딜레이
 	if (doAttack)
 	{
