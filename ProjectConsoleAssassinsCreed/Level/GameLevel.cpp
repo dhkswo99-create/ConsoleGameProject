@@ -29,7 +29,7 @@ bool GameLevel::CanMove(const Craft::Vector2& playerPosition, const Craft::Vecto
 			{
 				return false;
 			}
-			if (actor->IsTypeOf<Guard>())
+			if (actor->IsTypeOf<Enemy>())
 			{
 				return false;
 			}

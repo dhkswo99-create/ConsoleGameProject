@@ -86,7 +86,7 @@ std::vector<Vector2> Enemy::FindRoute(const Vector2& destination)
 	Vector2 Start = GetPosition();
 	Astar routeFinder(map, Start, Renderer::Get().GetPlayerPosition());
 	std::vector<Vector2> moveStack = routeFinder.AstarFinder(map, Start, destination);
-	moveIndex = moveStack.size() - 1;
+	moveIndex = static_cast<int>(moveStack.size() - 1);
 	return moveStack;
 }
 
@@ -121,31 +121,42 @@ void Enemy::Awake()
 // sightDegree로 판별. 
 void Enemy::Searching()
 {
-//	if (sleep)
-//	{
-//		return;
-//	}
-//	Vector2 playerPos = Renderer::Get().GetPlayerPosition();
-//	Vector2 myPos = GetPosition();
-//	distance = std::sqrt(
-//		std::pow(playerPos.x - myPos.x, 2)
-//		+ std::pow(playerPos.y - myPos.y, 2)
-//	);
-//	Vector2 myFace = GetFace();
-//	float innerProduct = static_cast<float>(playerPos.x * myPos.x + playerPos.y * myPos.y);
-//	float absFace = std::sqrt(
-//		std::pow(myFace.x, 2)
-//		+ std::pow(myFace.y, 2)
-//	);
-//	if (distance * absFace)
-//	{
-//		relativeAngle = acos(innerProduct / (distance * absFace));
-//	}
-//	if ( (sightRange > relativeAngle)
-//		&& ( sightDegree > relativeAngle && relativeAngle > -1 * sightDegree) ) 
-//	{
-//		pathDirection.clear();
-//		FindRoute(Renderer::Get().GetPlayerPosition());
-//	}
-//
+	Vector2 playerPos = Renderer::Get().GetPlayerPosition();
+	Vector2 myPos = GetPosition();
+	distance = static_cast<float>(std::sqrt(
+		std::pow(playerPos.x - myPos.x, 2)
+		+ std::pow(playerPos.y - myPos.y, 2)
+	));
+	Vector2 myFace = GetFace();
+	float innerProduct = static_cast<float>(
+		(playerPos.x - myPos.x)*face.x + (playerPos.y - myPos.y)*face.y
+		);
+		
+	float absFace = static_cast<float>(std::sqrt(
+		std::pow(myFace.x, 2)
+		+ std::pow(myFace.y, 2)
+	));
+	if (distance * absFace)
+	{
+		relativeAngle = acos(innerProduct / (distance * absFace));
+	}
+	else
+	{
+		relativeAngle = 0;
+	}
+	if (!sleep)
+	{
+		if ((sightRange > distance)
+			&& (sightDegree > relativeAngle && relativeAngle > -1 * sightDegree))
+		{
+			pathDirection.clear();
+			pathDirection = FindRoute(Renderer::Get().GetPlayerPosition());
+		}
+	}
+	if (sightRange / 4 > distance)
+	{
+		if(sleep) Awake();
+		pathDirection.clear();ㅇ
+		pathDirection = FindRoute(Renderer::Get().GetPlayerPosition()); //Guard.
+	}
 }

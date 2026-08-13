@@ -148,6 +148,16 @@ bool Astar::IsInRange(int x, int y)
 //벽이 있는지
 bool Astar::IsUnblocked(std::vector<std::vector<int>>& map, int x, int y)
 {
+	if (y < 0 || y >= static_cast<int>(map.size()))
+	{
+		return false;
+	}
+
+	if (x < 0 || x >= static_cast<int>(map[y].size()))
+	{
+		return false;
+	}
+
 	return (map[y][x] == 0);
 }
 
