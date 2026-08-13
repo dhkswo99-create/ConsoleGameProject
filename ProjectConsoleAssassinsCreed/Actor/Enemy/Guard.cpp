@@ -73,6 +73,8 @@ void Guard::Tick(float deltaTime)
 
 void Guard::Attack(int range, const Vector2&face, float deltaTime)
 {
+	super::Attack(range, face, deltaTime);
+
 	std::shared_ptr<GameLevel> level = Cast<GameLevel>(GetOwner());
 	std::shared_ptr<Level> owner = GetOwner();
 	if (owner)
