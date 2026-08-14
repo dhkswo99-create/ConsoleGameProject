@@ -193,7 +193,7 @@ Vector2 Enemy::FacingDirection(const Vector2& currentPosition)
 		(playerPos.x - currentPosition.x) * rightVector.x
 		+ (playerPos.y - currentPosition.y) * rightVector.y
 		);
-	int rayDistance = static_cast<float>(std::sqrt(
+	float rayDistance = static_cast<float>(std::sqrt(
 		std::pow(playerPos.x - currentPosition.x, 2)
 		+ std::pow(playerPos.y - currentPosition.y, 2)
 	));

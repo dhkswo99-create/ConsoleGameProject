@@ -103,7 +103,9 @@
     <ClCompile Include="Actor\Arrow.cpp" />
     <ClCompile Include="Actor\Camera.cpp" />
     <ClCompile Include="Actor\Enemy\Archer.cpp" />
+    <ClCompile Include="Actor\Enemy\Client.cpp" />
     <ClCompile Include="Actor\Enemy\Enemy.cpp" />
+    <ClCompile Include="Actor\Enemy\Target.cpp" />
     <ClCompile Include="Actor\Ground.cpp" />
     <ClCompile Include="Actor\Enemy\Guard.cpp" />
     <ClCompile Include="Actor\Player.cpp" />
@@ -119,7 +121,9 @@
     <ClInclude Include="Actor\Arrow.h" />
     <ClInclude Include="Actor\Camera.h" />
     <ClInclude Include="Actor\Enemy\Archer.h" />
+    <ClInclude Include="Actor\Enemy\Client.h" />
     <ClInclude Include="Actor\Enemy\Enemy.h" />
+    <ClInclude Include="Actor\Enemy\Target.h" />
     <ClInclude Include="Actor\Ground.h" />
     <ClInclude Include="Actor\Enemy\Guard.h" />
     <ClInclude Include="Actor\Player.h" />

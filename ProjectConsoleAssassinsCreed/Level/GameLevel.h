@@ -32,6 +32,9 @@ private:
 	//Draw 이벤트 함수
 	virtual void Draw() override;
 
+	//Tick 이벤트 함수
+	virtual void Tick(float deltaTime) override;
+
 	//맵 로드 함수
 	void LoadMap(const std::string& filename);
 

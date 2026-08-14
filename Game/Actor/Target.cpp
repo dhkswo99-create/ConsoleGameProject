@@ -1,4 +1,6 @@
 ﻿#include "Target.h"
+#include "Target.h"
+#include "Target.h"
 
 using namespace Craft;
 
@@ -11,4 +13,12 @@ Target::Target(const Vector2& position)
 	// 박스는 타겟 위에 배치될 수 잇어야 하므로 타겟보다 높은 우선순위
 	sortingOrder = 3;
 
+}
+
+Target::~Target()
+{
+}
+
+void Target::Tick(float deltaTime)
+{
 }

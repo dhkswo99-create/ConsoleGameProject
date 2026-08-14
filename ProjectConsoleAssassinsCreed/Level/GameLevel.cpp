@@ -105,19 +105,26 @@ void GameLevel::Draw()
 	{
 		Renderer::Get().Submit(
 			L"GameClear!!",
-			Vector2(30, 0)
+			Vector2(90, 20)
 		);
 	}
 }
 
-void GameLevel::LoadMap(const std::string& filename)
+void GameLevel::Tick(float deltaTime)
+{
+	super::Tick(deltaTime);
+
+  	isGameClear = CheckGameClear();
+}
+
+void GameLevel::LoadMap(const std::string& filename)  
 {
 	//최종 경로 조립
 	std::string path = std::string("../Assets/") + filename;
 
 	//파일 열기
-	FILE* file = nullptr;
-	fopen_s(&file, path.c_str(), "rt");
+	FILE* file = nullptr; 
+ 	fopen_s(&file, path.c_str(), "rt");
 	if (!file)
 	{
 		assert(false && "failed to open a gameMap file.");
@@ -260,7 +267,6 @@ bool GameLevel::CheckGameClear()
 			++leftTarget;
 		}
 	}
-
 	// 클라이언트를 모두 죽이거나 타겟을 모두 죽인 경우 
 	return leftClient == 0 || leftTarget == 0;
 }

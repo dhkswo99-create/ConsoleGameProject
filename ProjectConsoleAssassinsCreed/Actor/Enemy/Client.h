@@ -13,5 +13,9 @@ public:
 	~Client();
 
 	void Tick(float deltaTime) override;
+	bool GetIsDead() { return isDead; }
+
+private:
+	bool isDead = false;
 };
 
