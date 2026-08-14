@@ -21,8 +21,9 @@ static const ArrowFrame arrow[] =
 };
 
 Arrow::Arrow(const Vector2& arrowPath)
-	: super(L" ", arrowPath,  Color::Red)
+	: super(L"a", arrowPath,  Color::Red)
 {
+	timer.SetTargetTime(0.2f);
 	Vector2 face = FacingDirection(GetPosition());
 	int faceCheck = face.x * 3 + face.y;
 	switch (faceCheck)
@@ -67,7 +68,7 @@ void Arrow::Tick(float deltaTime)
 
 	timer.Reset();
 }
-Vector2 FacingDirection(const Vector2& currentPosition)
+Vector2 Arrow::FacingDirection(const Vector2& currentPosition)
 {
 	Vector2 playerPos = Renderer::Get().GetPlayerPosition();
 	Vector2 rightVector = Vector2(1, 0);

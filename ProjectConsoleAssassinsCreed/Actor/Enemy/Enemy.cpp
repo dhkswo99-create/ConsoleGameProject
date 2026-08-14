@@ -41,7 +41,7 @@ void Enemy::Tick(float deltaTime)
 	
 	if (Input::Get().GetKeyDown('t') || Input::Get().GetKeyDown('T'))
 	{
-		if (this->IsTypeOf<Guard>() || this->IsTypeOf<Archer>())
+		if (this->IsTypeOf<Guard>())
 		{
 			pathDirection.clear();
 			pathDirection = FindRoute(Renderer::Get().GetPlayerPosition()); //Guard.
@@ -141,7 +141,7 @@ bool Enemy::Searching()
 	));
 	Vector2 myFace = GetFace();
 	float innerProduct = static_cast<float>(
-		(playerPos.x - myPos.x)*face.x + (playerPos.y - myPos.y)*face.y
+		(playerPos.x - myPos.x)* myFace.x + (playerPos.y - myPos.y)* myFace.y
 		);
 		
 	float absFace = static_cast<float>(std::sqrt(

@@ -9,7 +9,7 @@ Archer::Archer(const Vector2& position)
 	:super(L"A", position, Color::Cyan)
 {
 	//도망 범위
-	runRange = 4;
+	runRange = 4.0f;
 	//공격 범위
 	range = 10;
 	sightRange = 12;
@@ -29,7 +29,7 @@ void Archer::Tick(float deltaTime)
 	delay.Tick(deltaTime);
 
 
-	if (InAttackRange() && !isWall)
+	if (InAttackRange() && !isWall && distance > runRange)
 	{
 		FacePlayer();
 		WillAttack();
@@ -43,7 +43,7 @@ void Archer::Tick(float deltaTime)
 			Attack(range, face, deltaTime);
 			doneAttack = false;
 			doAttack = false;
-			delay.Reset();
+		delay.Reset();
 		}
 	}
 
@@ -64,10 +64,10 @@ void Archer::Tick(float deltaTime)
 		delay.Reset();
 		if (distance < runRange)
 		{
-			Vector2 reverseFace(-face.x, -face.y);
+			Vector2 reverseFace = Vector2(0, 0) - face;
 			Move(reverseFace, deltaTime);
 		}
-		if (moveIndex > 0 && !InAttackRange())
+		else if (moveIndex > 0 && !InAttackRange())
 		{
 			Move(pathDirection[moveIndex], deltaTime);
 		}
@@ -80,12 +80,23 @@ void Archer::Attack(int range, const Vector2& face, float deltaTime)
 	std::shared_ptr<GameLevel> level = Cast<GameLevel>(GetOwner());
 	std::shared_ptr<Level> owner = GetOwner();
 	std::vector<Vector2> arrowPath = RayDirectionQueueInsert(GetPosition());
-
+	bool isWallArrow = false;
+	for (Vector2 path : arrowPath)
+	{
+		isWallArrow = level->IsWall(path);
+		if (isWallArrow)
+		{
+			break;
+		}
+	}
 	if (owner)
 	{
 		for (Vector2 path : arrowPath)
 		{
-			owner->SpawnActor<Arrow>(arrowPath);
+			if (!isWallArrow)
+			{
+				owner->SpawnActor<Arrow>(path);
+			}
 		}
 	}
 }

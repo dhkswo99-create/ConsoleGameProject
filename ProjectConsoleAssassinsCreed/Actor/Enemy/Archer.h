@@ -28,7 +28,7 @@ public:
 	//// 모든 Enemy Awake, Move Call완료 시 caller = false;
 	//void Call(const Vector2& spotOfDetection);
 private:
-	int runRange;
+	float runRange;
 
 	float castDelay;
 	float attackDelay;  // 랜덤으로 돌릴 것
