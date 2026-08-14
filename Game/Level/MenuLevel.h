@@ -10,15 +10,14 @@ struct MenuItem
 	using OnSelected = void (*)(); // typedef void (*OnSelected)();
 
 	//생성자
-	MenuItem(const std::string& text, OnSelected onSelected)
+	MenuItem(const std::wstring& text, OnSelected onSelected)
 		:text(text), onSelected(onSelected)
 	{
-		
 	}
 
 
 	//메뉴텍스트
-	std::string text;
+	std::wstring text;
 
 	// 메뉴를 선택했을 때 실행할 로직
 	OnSelected onSelected = nullptr;

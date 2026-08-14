@@ -8,10 +8,11 @@
 using namespace Craft;
 
 Player::Player(const Vector2& position)
-	: super(L"P", position, Color::Green)
+	: super(L"→", position, Color::Green)
 {
 	// 다른 객체들보다 높은 우선 순위를 둘 것.
-	// Enemy 객체와 벽 객체와는 Collision 시 overlap 불가.
+	// Enemy 객체와 벽 객체와는 Collision 시 overlap 불가
+	face = Vector2::Right;
 	moveSpeed = 10.0f;
 	sortingOrder = 10;
 	//충돌 허용

@@ -2,7 +2,7 @@
 
 #define ANGLE 180/3.14
 
-#include <Actor/Enemy/Enemy.h>
+#include <Actor/Enemy/Guard.h>
 #include <Actor/Player.h>
 #include <Render/Renderer.h>
 #include <cmath>
@@ -92,10 +92,10 @@ void Arrow::Tick(float deltaTime)
 void Arrow::OnCollision(const std::shared_ptr<Actor>& other)
 {
 	if (other->IsTypeOf<Player>()
-		|| other->IsTypeOf<Enemy>()
+		|| other->IsTypeOf<Guard>()
 		)
 	{
-
+		other->Destroy();
 	}
 }
 

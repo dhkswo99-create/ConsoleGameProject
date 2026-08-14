@@ -7,6 +7,7 @@ class Camera : public Craft::Actor
 	TYPE_DECLARATIONS(Camera, Actor)
 public:
 	Camera();
+	void SetCameraView(const Craft::Vector2& position) { cameraView = position; }
 
 private:
 	virtual void Tick(float deltaTime) override;

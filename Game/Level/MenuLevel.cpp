@@ -84,7 +84,7 @@ void MenuLevel::Draw()
 	*/
 
 	//제목 그리기
-	Renderer::Get().Submit("Sokoban Game", Vector2::Zero);
+	Renderer::Get().Submit(L"Console AssasinsCreed", Vector2::Zero);
 
 	// 메뉴 아이템 그리기
 	const int count = static_cast<int>(itemList.size());

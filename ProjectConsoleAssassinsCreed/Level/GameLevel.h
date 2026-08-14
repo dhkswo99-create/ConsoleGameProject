@@ -2,10 +2,13 @@
 
 #include <Level/Level.h>
 
+
+class Camera;
 //소코반 게임 레벨 클래스
 //게임 클리어 등 게임 규칙 및 전반을 관리
 class GameLevel :public Craft::Level
 {
+
 public:
 	//커스텀 타입 설정
 	TYPE_DECLARATIONS(GameLevel, Level)
@@ -42,21 +45,19 @@ private:
 
 
 private:
-	//점수확인함수
-	bool CheckGameClear();
+	//게임상태설정함수
+	void SetGameStatus();
 
 private:
-	//목표 점수 - 클리어 조건
-	int targetScore = 0;
-
-	//게임 클리어 여부 플래그
-	bool isGameClear = false;
+	bool targetClear = false;
+	bool clientClear = false;
 	//게임오버 
 	bool isGameOver = false;
 
 
 	std::vector<std::vector<int>> map;
 	std::vector<std::vector<int>> clearMap;
+	std::shared_ptr<Camera> camera;
 };
 
 

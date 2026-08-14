@@ -18,7 +18,9 @@ using namespace Craft;
 bool GameLevel::CanMove(const Craft::Vector2& playerPosition, const Craft::Vector2& nextPosition)
 {
 	//게임 클리어인 경우 처리 안함
-	if (isGameClear)
+	if (isGameOver 
+		|| targetClear
+		|| clientClear)
 	{
 		return false;
 	}
@@ -44,7 +46,10 @@ bool GameLevel::CanMove(const Craft::Vector2& playerPosition, const Craft::Vecto
 
 bool GameLevel::CanAttack(const Craft::Vector2& playerPosition, const Craft::Vector2& face)
 {
-	if (isGameClear)
+	if (isGameOver
+		|| targetClear
+		|| clientClear)
+
 	{
 		return false;
 	}
@@ -67,7 +72,10 @@ bool GameLevel::CanAttack(const Craft::Vector2& playerPosition, const Craft::Vec
 bool GameLevel::IsWall(const Craft::Vector2& currentPositon)
 {
 	//게임 클리어인 경우 처리 안함
-	if (isGameClear)
+	if (isGameOver
+		|| targetClear
+		|| clientClear)
+
 	{
 		return false;
 	}
@@ -98,23 +106,45 @@ void GameLevel::OnInitialized()
 
 void GameLevel::Draw()
 {
-	Level::Draw();
 	
 	//게임 클리어표시
-	if (isGameClear)
+	if (isGameOver)
 	{
+		camera->SetCameraView(Renderer::Get().GetPlayerPosition());
 		Renderer::Get().Submit(
-			L"GameClear!!",
-			Vector2(90, 20)
+			L"GameOver!!",
+			Vector2(30, 0)
 		);
+		camera->Destroy();
+	}
+	else if (targetClear)
+	{
+		camera->SetCameraView(Renderer::Get().GetPlayerPosition());
+		Renderer ::Get().Submit(
+			L"The target is dead.But was it really the right choice... ?",
+			Vector2(40, 20)
+		);
+		camera->Destroy();
+	}
+	else if (clientClear)
+	{
+		camera->SetCameraView(Renderer::Get().GetPlayerPosition());
+		Renderer::Get().Submit(
+			L"The client is dead.But was it really the right choice... ?",
+			Vector2(40, 15)
+		);
+		camera->Destroy();
+	}
+	else
+	{
+		Level::Draw();
 	}
 }
 
 void GameLevel::Tick(float deltaTime)
 {
 	super::Tick(deltaTime);
-
-  	isGameClear = CheckGameClear();
+	SetGameStatus();
 }
 
 void GameLevel::LoadMap(const std::string& filename)  
@@ -218,7 +248,7 @@ void GameLevel::LoadMap(const std::string& filename)
 			break;
 		case 'p': //플레이어
 			SpawnActor<Ground>(position); //플레이어가 이동한 후에 바닥
-			SpawnActor<Camera>();
+			camera = SpawnActor<Camera>();
 			SpawnActor<Player>(position);
 			break;
 		}
@@ -239,17 +269,22 @@ void GameLevel::LoadMap(const std::string& filename)
 	
 }
 
-bool GameLevel::CheckGameClear()
+void GameLevel::SetGameStatus()
 {
+	if (!collisionEnabledActorList.size())
+	{
+		return;
+	}
 	//점수
 	int leftClient = 0;
 	int leftTarget = 0;
-
+	bool playerArlive = false;
 	//하고싶은 일 : 박스가 타겟에 위치에 모두 배치되었는지 확인
 
 	//박스 목록/ 타겟 목록 저장
 	std::vector<std::shared_ptr<Actor>> clientList;
 	std::vector<std::shared_ptr<Actor>> targetList;
+	std::vector<std::shared_ptr<Actor>> playerList;
 
 	//게임 레벨의 모든 액터를 순회하면서 박스와 타겟 목록에 저장
 	for (const std::shared_ptr<Actor>& actor : collisionEnabledActorList)
@@ -265,9 +300,26 @@ bool GameLevel::CheckGameClear()
 		{ //타겟인 경우 목록 추가
 			targetList.emplace_back(actor);
 			++leftTarget;
+			continue;
+		}
+
+		if (actor->IsTypeOf<Player>())
+		{
+			playerList.emplace_back(actor);
+			playerArlive = true;
 		}
 	}
-	// 클라이언트를 모두 죽이거나 타겟을 모두 죽인 경우 
-	return leftClient == 0 || leftTarget == 0;
+	if (!leftClient)
+	{
+		clientClear = true;
+	}
+	if (!leftTarget)
+	{
+		targetClear = true;
+	}
+	if (!playerArlive)
+	{
+		isGameOver = true;
+	}
 }
 
