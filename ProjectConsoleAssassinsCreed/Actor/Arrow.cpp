@@ -9,50 +9,55 @@ using namespace Craft;
 using ArrowFrame = Arrow::ArrowFrame;
 static const ArrowFrame arrow[] =
 {
-	{ L"→", 0.2f, Color::Red },
-	{ L"↗", 0.2f, Color::Red },
-	{ L"↑", 0.2f, Color::Red },
-	{ L"↖", 0.2f, Color::Red },
-	{ L"←", 0.2f, Color::Red },
-	{ L"↙", 0.2f, Color::Red },
-	{ L"↓", 0.2f, Color::Red },
-	{ L"↘", 0.2f, Color::Red }
-
+	{ L"→", 0.3f, Color::Red },
+	{ L"↗", 0.3f, Color::Red },
+	{ L"↑", 0.3f, Color::Red },
+	{ L"↖", 0.3f, Color::Red },
+	{ L"←", 0.3f, Color::Red },
+	{ L"↙", 0.3f, Color::Red },
+	{ L"↓", 0.3f, Color::Red },
+	{ L"↘", 0.3f, Color::Red }
 };
 
-Arrow::Arrow(const Vector2& arrowPath)
-	: super(L"a", arrowPath,  Color::Red)
+Arrow::Arrow(const Vector2& position, const std::vector<Vector2>& arrowPath)
+	: super(L"a", position, Color::Red),
+	arrowPos(arrowPath)
 {
-	timer.SetTargetTime(0.2f);
-	Vector2 face = FacingDirection(GetPosition());
-	int faceCheck = face.x * 3 + face.y;
-	switch (faceCheck)
+	timer.SetTargetTime(0.3f);
+	for (Vector2 path : arrowPath)
 	{
-	case 1: //하단 ( x = 0 y = 1 ) 
-		this->image = L"↓";
-		break;
-	case 2: //우상단 ( x =1 y = -1 )
-		this->image = L"↗";
-		break;
-	case 3: //우 ( x = 1 y = 0 )
-		this->image = L"→";
-		break;
-	case 4: //우하단 ( x = 1 y = 1 )
-		this->image = L"↘";
-		break;
-	case -1: //상단
-		this->image = L"↑";
-		break;
-	case -2: //좌하단
-		this->image = L"↙";
-		break;
-	case -3: //좌
-		this->image = L"←";
-		break;
-	case -4: //좌상단
-		this->image = L"↖";
-		break;
+		Vector2 face = FacingDirection(path);
+		int faceCheck = face.x * 3 + face.y;
+		switch (faceCheck)
+		{
+		case 1: //하단 ( x = 0 y = 1 ) 
+			arrowQueue.emplace_back(arrow[6]);
+			break;
+		case 2: //우상단 ( x =1 y = -1 )
+			arrowQueue.emplace_back(arrow[1]);
+			break;
+		case 3: //우 ( x = 1 y = 0 )
+			arrowQueue.emplace_back(arrow[0]);
+			break;
+		case 4: //우하단 ( x = 1 y = 1 )
+			arrowQueue.emplace_back(arrow[7]);
+			break;
+		case -1: //상단
+			arrowQueue.emplace_back(arrow[2]);
+			break;
+		case -2: //좌하단
+			arrowQueue.emplace_back(arrow[5]);
+			break;
+		case -3: //좌
+			arrowQueue.emplace_back(arrow[4]);
+			break;
+		case -4: //좌상단
+			arrowQueue.emplace_back(arrow[3]);
+			break;
+		}
 	}
+	effectSequenceCount = static_cast<int>(arrowPath.size());
+	currentIndex = 0;
 }
 
 void Arrow::Tick(float deltaTime)
@@ -60,14 +65,33 @@ void Arrow::Tick(float deltaTime)
 	super::Tick(deltaTime);
 
 	timer.Tick(deltaTime);
+
 	if (!timer.IsTimeOut())
 	{
 		return;
 	}
-	Destroy();
+
+	if (effectSequenceCount - 1 == currentIndex)
+	{
+		Destroy();
+		return;
+	}
 
 	timer.Reset();
+
+	ChangeImage(arrowQueue[currentIndex].frame);
+	SetPosition(arrowPos[currentIndex]);
+	
+	++currentIndex;
 }
+
+
+
+
+
+
+
+
 Vector2 Arrow::FacingDirection(const Vector2& currentPosition)
 {
 	Vector2 playerPos = Renderer::Get().GetPlayerPosition();

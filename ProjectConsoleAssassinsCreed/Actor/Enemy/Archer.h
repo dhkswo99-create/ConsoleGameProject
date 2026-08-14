@@ -19,6 +19,7 @@ public:
 	void WillAttack();
 
 	void FacePlayer();
+	bool InAttackRange() { return distance < range; }
 
 	// 시야 범위 내에 Player가 발각된다면 Calling 상태로 진입
 	// 이미 Call이 호출된 상태라면 Tracking 호출
@@ -41,5 +42,5 @@ private:
 	double facingAngle;
 
 	Timer delay;
-	int range = 3;
+	int range;
 };

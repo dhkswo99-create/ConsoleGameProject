@@ -31,7 +31,7 @@ class Arrow : public Actor
 		Craft::Color color = Craft::Color::White;
 	};
 public:
-	Arrow(const Vector2& arrowPath);
+	Arrow(const Vector2& position, const std::vector<Vector2>& arrowPath);
 	~Arrow() = default;
 	
 Vector2 FacingDirection(const Vector2& currentPosition);
@@ -40,8 +40,14 @@ private:
 	virtual void Tick(float deltaTime) override;
 
 private:
+	int currentIndex;
+	int effectSequenceCount;
 	// 애니메이션 재생에 사용할 타이머.
 	// 시퀀스 사이에 시간 계산용.
 	Timer timer;
+
+	// 화살 대기 큐 
+	std::vector<ArrowFrame> arrowQueue;
+	std::vector<Vector2> arrowPos;
 };
 

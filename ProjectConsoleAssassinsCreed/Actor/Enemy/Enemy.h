@@ -53,11 +53,8 @@ public:
 	void SetSightRange(float newSightRange) { sightRange = newSightRange; }
 	void SetDistance(float newDistance) { distance = newDistance; }
 	void SetRelativeAngle(float newRelativeAngle) { relativeAngle = newRelativeAngle; }
-	bool InAttackRange() { return distance < range; }
 
 protected:
-	// 레이의 길이
-	int bresenhamCount = 0;
 	//벽이 있는지
 	bool isWall = false;
 
@@ -67,7 +64,7 @@ protected:
 	double facingAngle;
 
 	//사거리
-	int range;
+	int range = 7;
 	//시야반경
 	float sightRange =  10;
 	//이동속도

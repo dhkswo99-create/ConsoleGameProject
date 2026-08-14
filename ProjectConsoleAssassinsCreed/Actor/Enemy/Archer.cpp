@@ -11,8 +11,8 @@ Archer::Archer(const Vector2& position)
 	//도망 범위
 	runRange = 4.0f;
 	//공격 범위
-	range = 10;
-	sightRange = 12;
+	range = 12;
+	sightRange = 15;
 	moveSpeed = 5.0f;
 	sortingOrder = 3;
 	castDelay = 1.7f;
@@ -64,7 +64,7 @@ void Archer::Tick(float deltaTime)
 		delay.Reset();
 		if (distance < runRange)
 		{
-			Vector2 reverseFace = Vector2(0, 0) - face;
+			Vector2 reverseFace = Vector2(0, 0) - FacingDirection(GetPosition());
 			Move(reverseFace, deltaTime);
 		}
 		else if (moveIndex > 0 && !InAttackRange())
@@ -80,23 +80,11 @@ void Archer::Attack(int range, const Vector2& face, float deltaTime)
 	std::shared_ptr<GameLevel> level = Cast<GameLevel>(GetOwner());
 	std::shared_ptr<Level> owner = GetOwner();
 	std::vector<Vector2> arrowPath = RayDirectionQueueInsert(GetPosition());
-	bool isWallArrow = false;
-	for (Vector2 path : arrowPath)
-	{
-		isWallArrow = level->IsWall(path);
-		if (isWallArrow)
-		{
-			break;
-		}
-	}
 	if (owner)
 	{
-		for (Vector2 path : arrowPath)
+		if (!isWall)
 		{
-			if (!isWallArrow)
-			{
-				owner->SpawnActor<Arrow>(path);
-			}
+			owner->SpawnActor<Arrow>(GetPosition(), arrowPath);
 		}
 	}
 }
