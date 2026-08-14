@@ -1,5 +1,9 @@
 ﻿#include "Sword.h"
 
+#include <Actor/Player.h>
+#include <Actor/Enemy/Enemy.h>
+#include <Actor/Arrow.h>
+
 using namespace Craft;
 using SwordFrame = Sword::SwordFrame;
 
@@ -12,6 +16,21 @@ Sword::Sword(const Vector2& position)
 {
 	sortingOrder = 1;
 	timer.SetTargetTime(sword.playTime);
+	//충돌 허용
+	SetColiisionEnabled(true);
+}
+
+void Sword::OnCollision(const std::shared_ptr<Actor>& other)
+{
+	super::OnCollision(other);
+
+	if (other->IsTypeOf<Player>()
+		|| other->IsTypeOf<Enemy>()
+		|| other->IsTypeOf<Arrow>()
+		)
+	{
+		other->Destroy();
+	}
 }
 
 void Sword::Tick(float deltaTime)

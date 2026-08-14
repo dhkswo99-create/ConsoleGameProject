@@ -33,6 +33,7 @@ class Sword : public Actor
 public:
 	Sword(const Vector2& position);
 	~Sword() = default;
+	virtual void OnCollision(const std::shared_ptr<Actor>& other) override;
 
 private:
 	virtual void Tick(float deltaTime) override;

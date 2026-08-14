@@ -54,6 +54,13 @@ namespace Craft
 
 		void SetPlayerFace(const Vector2& newface);
 
+		void SetColiisionEnabled(bool iscollisionEnabled)
+		{
+			collisionEnabled = iscollisionEnabled;
+		}
+
+		bool GetCollisionEnabled() { return collisionEnabled; }
+
 		//이전 위치 반환
 		inline Vector2 GetPreviousPosition() const { return previousPosition; }
 
@@ -80,8 +87,12 @@ namespace Craft
 			// 새로운 글자값 설정
 			image = newImage;
 		}
-		
+
+
+
 	protected:
+		//충돌 가능 여부
+		bool collisionEnabled = false;
 		//BeginPlay 생에 한번만 처리
 		bool hasBeganPlay = false;
 		//액터 활성화 여부

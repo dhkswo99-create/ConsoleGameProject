@@ -4,7 +4,8 @@
 #include <Actor/Enemy/Guard.h>
 #include <Actor/Enemy/Archer.h>
 #include <Actor/Arrow.h>
-//#include <Actor/Target.h>
+#include <Actor/Enemy/Target.h>
+#include <Actor/Enemy/Client.h>
 #include <Actor/Player.h>
 #include <Actor/Camera.h>
 #include <Render/Renderer.h>
@@ -172,6 +173,7 @@ void GameLevel::LoadMap(const std::string& filename)
 			clearMap.emplace_back();
 			continue;
 		}
+
 		clearMap.emplace_back(0);
 		if (mapCharacter == '#')
 		{
@@ -199,14 +201,14 @@ void GameLevel::LoadMap(const std::string& filename)
 			SpawnActor<Archer>(position);
 			SpawnActor<Ground>(position);
 			break;
-		//case 'b': //상자
-		//	SpawnActor<Ground>(position); //박스가 이동한 후에 바닥
-		//	SpawnActor<Box>(position);
-		//	break;
-		//case 't': //타겟
-		//	SpawnActor<Target>(position);
-		//	++targetScore;
-		//	break;
+		case 't': // 타겟
+			SpawnActor<Target>(position);
+			SpawnActor<Ground>(position);
+			break;
+		case 'c': // 의뢰인
+			SpawnActor<Client>(position);
+			SpawnActor<Ground>(position);
+			break;
 		case 'p': //플레이어
 			SpawnActor<Ground>(position); //플레이어가 이동한 후에 바닥
 			SpawnActor<Camera>();
@@ -232,7 +234,34 @@ void GameLevel::LoadMap(const std::string& filename)
 
 bool GameLevel::CheckGameClear()
 {
-	return false;
-}
+	//점수
+	int leftClient = 0;
+	int leftTarget = 0;
 
+	//하고싶은 일 : 박스가 타겟에 위치에 모두 배치되었는지 확인
+
+	//박스 목록/ 타겟 목록 저장
+	std::vector<std::shared_ptr<Actor>> clientList;
+	std::vector<std::shared_ptr<Actor>> targetList;
+
+	//게임 레벨의 모든 액터를 순회하면서 박스와 타겟 목록에 저장
+	for (const std::shared_ptr<Actor>& actor : collisionEnabledActorList)
+	{
+		if (actor->IsTypeOf<Client>())
+		{ //클라이언트인 경우 목록 추가
+			clientList.emplace_back(actor);
+			++leftClient;
+			continue;
+		}
+
+		if (actor->IsTypeOf<Target>())
+		{ //타겟인 경우 목록 추가
+			targetList.emplace_back(actor);
+			++leftTarget;
+		}
+	}
+
+	// 클라이언트를 모두 죽이거나 타겟을 모두 죽인 경우 
+	return leftClient == 0 || leftTarget == 0;
+}
 

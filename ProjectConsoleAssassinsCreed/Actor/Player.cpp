@@ -14,6 +14,8 @@ Player::Player(const Vector2& position)
 	// Enemy 객체와 벽 객체와는 Collision 시 overlap 불가.
 	moveSpeed = 10.0f;
 	sortingOrder = 10;
+	//충돌 허용
+	SetColiisionEnabled(true);
 }
 
 void Player::Tick(float deltaTime)
@@ -30,6 +32,7 @@ void Player::Tick(float deltaTime)
 		game.ToggleMenu();
 		return;
 	}
+
 
 	delay.Tick(deltaTime);
 	buff.Tick(deltaTime);

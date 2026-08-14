@@ -78,6 +78,10 @@ namespace Craft
 		for (const auto& actor : addRequestedActorList)
 		{
 			actorList.emplace_back(actor);
+			if (actor->GetCollisionEnabled())
+			{
+				collisionEnabledActorList.emplace_back(actor);
+			}
 		}
 		//추가 처리된 목록 정리
 		addRequestedActorList.clear();

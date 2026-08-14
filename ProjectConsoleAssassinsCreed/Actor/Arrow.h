@@ -33,8 +33,10 @@ class Arrow : public Actor
 public:
 	Arrow(const Vector2& position, const std::vector<Vector2>& arrowPath);
 	~Arrow() = default;
+ 
+	virtual void OnCollision(const std::shared_ptr<Actor>& other) override;
 	
-Vector2 FacingDirection(const Vector2& currentPosition);
+	Vector2 FacingDirection(const Vector2& currentPosition);
 
 private:
 	virtual void Tick(float deltaTime) override;

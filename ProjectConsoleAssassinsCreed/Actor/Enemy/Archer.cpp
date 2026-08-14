@@ -19,6 +19,8 @@ Archer::Archer(const Vector2& position)
 	attackDelay = 1.0f;
 
 	face = Vector2::Left;
+	//충돌 허용
+	SetColiisionEnabled(true);
 
 }
 

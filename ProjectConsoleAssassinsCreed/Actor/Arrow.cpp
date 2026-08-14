@@ -2,6 +2,8 @@
 
 #define ANGLE 180/3.14
 
+#include <Actor/Enemy/Enemy.h>
+#include <Actor/Player.h>
 #include <Render/Renderer.h>
 #include <cmath>
 
@@ -58,6 +60,8 @@ Arrow::Arrow(const Vector2& position, const std::vector<Vector2>& arrowPath)
 	}
 	effectSequenceCount = static_cast<int>(arrowPath.size());
 	currentIndex = 0;
+	//충돌 허용
+	SetColiisionEnabled(true);
 }
 
 void Arrow::Tick(float deltaTime)
@@ -85,12 +89,15 @@ void Arrow::Tick(float deltaTime)
 	++currentIndex;
 }
 
+void Arrow::OnCollision(const std::shared_ptr<Actor>& other)
+{
+	if (other->IsTypeOf<Player>()
+		|| other->IsTypeOf<Enemy>()
+		)
+	{
 
-
-
-
-
-
+	}
+}
 
 Vector2 Arrow::FacingDirection(const Vector2& currentPosition)
 {

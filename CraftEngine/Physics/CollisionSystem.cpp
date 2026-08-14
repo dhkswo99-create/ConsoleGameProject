@@ -4,10 +4,10 @@
 namespace Craft
 {
 	void CollisionSystem::ProcessCollision(
-		const std::vector<std::shared_ptr<Actor>>& actorList)
+		const std::vector<std::shared_ptr<Actor>>& collisionEnabledActorList)
 	{
 		// 예외처리.
-		if (actorList.empty())
+		if (collisionEnabledActorList.empty())
 		{
 			return;
 		}
@@ -16,12 +16,12 @@ namespace Craft
 		std::vector<CollisionPair> collidedActorList;
 
 		// 레벨에 배치된 액터 수.
-		const int count = static_cast<int>(actorList.size());
+		const int count = static_cast<int>(collisionEnabledActorList.size());
 
 		// 모든 액터를 순회하면서 충돌 검사.
 		for (int ix = 0; ix < count; ++ix)
 		{
-			const std::shared_ptr<Actor>& left = actorList[ix];
+			const std::shared_ptr<Actor>& left = collisionEnabledActorList[ix];
 			if (!left || !left->IsActive())
 			{
 				continue;
@@ -29,7 +29,7 @@ namespace Craft
 
 			for (int jx = ix + 1; jx < count; ++jx)
 			{
-				const std::shared_ptr<Actor>& right = actorList[jx];
+				const std::shared_ptr<Actor>& right = collisionEnabledActorList[jx];
 				if (!right || !right->IsActive())
 				{
 					continue;

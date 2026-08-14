@@ -35,6 +35,9 @@ private:
 	//맵 로드 함수
 	void LoadMap(const std::string& filename);
 
+	//게임 오버 
+
+
 private:
 	//점수확인함수
 	bool CheckGameClear();
@@ -45,6 +48,9 @@ private:
 
 	//게임 클리어 여부 플래그
 	bool isGameClear = false;
+	//게임오버 
+	bool isGameOver = false;
+
 
 	std::vector<std::vector<int>> map;
 	std::vector<std::vector<int>> clearMap;

@@ -85,7 +85,7 @@ namespace Craft
 				//게임업데이트
 				Tick(deltaTime);
 				//충돌처리
-				//ProcessCollision();
+				ProcessCollision();
 				//화면 그리기
 				Draw();
 			
@@ -194,7 +194,7 @@ namespace Craft
 		
 		//충돌 처리
 		//의존성 주입 -> 액터리스트를 관리할 필요 없이 받아서 사용하는 것.
-		collisionSystem->ProcessCollision(mainLevel->actorList);
+		collisionSystem->ProcessCollision(mainLevel->collisionEnabledActorList);
 
 	}
 	void Engine::SavePreviousInputStates()

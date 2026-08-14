@@ -20,6 +20,8 @@ Guard::Guard(const Vector2& position)
 	attackDelay = 0.3f;
 
 	face = Vector2::Left;
+	//충돌 허용
+	SetColiisionEnabled(true);
 
 }
 

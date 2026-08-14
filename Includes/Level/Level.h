@@ -95,7 +95,9 @@ namespace Craft
 
 		//레벨에 배치된 모든 액터
 		std::vector<std::shared_ptr<Actor>> actorList; //sharedptr 소유권 이전 할 수 있는 포인터
-	
+		//충돌이 허용된 액터 리스트
+		std::vector<std::shared_ptr<Actor>> collisionEnabledActorList; 
+
 		//레벨에 추가 요청된 액터를 저장해두는 목록.
 		//현재 프레임을 처리하는 과정에서 액터 추가 요청이 발생하면
 		//해당 액터를 바로 추가하면 기존 액터 처리에 문제가 발생가능
