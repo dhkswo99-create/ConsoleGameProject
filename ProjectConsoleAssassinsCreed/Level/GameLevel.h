@@ -20,7 +20,10 @@ public:
 		const Craft::Vector2& face
 	);
 
+	bool IsWall(const Craft::Vector2& currentPositon);
+
 	std::vector<std::vector<int>> GetMap() { return map; }
+	std::vector<std::vector<int>> GetClearMap() { return clearMap; }
 
 private:
 	//레벨 초기화 함수
@@ -44,6 +47,7 @@ private:
 	bool isGameClear = false;
 
 	std::vector<std::vector<int>> map;
+	std::vector<std::vector<int>> clearMap;
 };
 
 

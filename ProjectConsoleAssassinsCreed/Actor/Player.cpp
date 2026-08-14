@@ -12,6 +12,7 @@ Player::Player(const Vector2& position)
 {
 	// 다른 객체들보다 높은 우선 순위를 둘 것.
 	// Enemy 객체와 벽 객체와는 Collision 시 overlap 불가.
+	moveSpeed = 10.0f;
 	sortingOrder = 10;
 }
 
@@ -19,21 +20,6 @@ void Player::Tick(float deltaTime)
 {
 	//상위 객체 tick 호출
 	super::Tick(deltaTime);
-	
-	//프레임 관련 문자열
-	const int size = 256;
-	char fpsString[size] = {};
-
-	sprintf_s(
-		fpsString,
-		size,
-		"dt: %f | fps: %.1f",
-		deltaTime,
-		(1.0f) / deltaTime
-	);
-
-	//콘솔 창 이름에 값 설정
-	SetConsoleTitleA(fpsString);
 
 	// ESC 종료
 	if (Input::Get().GetKeyDown(VK_ESCAPE))
@@ -80,11 +66,11 @@ void Player::Tick(float deltaTime)
 	{
 		buff.SetTargetTime(buffDuration);
 		buff.Reset();
-		moveSpeed = 200.0f;
+		moveSpeed = 20.0f;
 	}
 	if (buff.IsTimeOut())
 	{
-		moveSpeed = 50.0f;
+		moveSpeed = 10.0f;
 	}
 
 	if (Input::Get().GetKeyDown(VK_SPACE))
@@ -263,7 +249,7 @@ void Player::Attack(const int range, const Vector2& face, float deltaTime)
 	{
 		Vector2 	swordPath = position;
 		for (int ix = 1; ix <= range && level->CanAttack(swordPath, face); ++ix)
-		{
+		{ //CanAttack에 Guard의 경우 Enemy가 앞에 있을 때 아예 공격을 막아버리게 하고 싶긴 해
 			swordPath.x += face.x;
 			swordPath.y += face.y;
 			owner->SpawnActor<Sword>(swordPath);

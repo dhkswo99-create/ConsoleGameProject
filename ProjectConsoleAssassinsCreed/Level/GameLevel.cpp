@@ -3,6 +3,7 @@
 #include <Actor/Ground.h>
 #include <Actor/Enemy/Guard.h>
 #include <Actor/Enemy/Archer.h>
+#include <Actor/Arrow.h>
 //#include <Actor/Target.h>
 #include <Actor/Player.h>
 #include <Actor/Camera.h>
@@ -37,7 +38,6 @@ bool GameLevel::CanMove(const Craft::Vector2& playerPosition, const Craft::Vecto
 			return true; // 박스는 이미 처리됨
 		}
 	}
-
 	return false; // 예상치 못한 처리 - 이동 불가
 }
 
@@ -59,12 +59,31 @@ bool GameLevel::CanAttack(const Craft::Vector2& playerPosition, const Craft::Vec
 			return true;
 		}
 	}
-
-
 	return false;
 }
 
+// 현재 위치가 벽인지
+bool GameLevel::IsWall(const Craft::Vector2& currentPositon)
+{
+	//게임 클리어인 경우 처리 안함
+	if (isGameClear)
+	{
+		return false;
+	}
 
+	// 플레이어가 이동하려는 곳에 벽이 있을 경우 
+	for (const std::shared_ptr<Actor>& actor : actorList)
+	{
+		if (actor->GetPosition() == currentPositon)
+		{
+			if (actor->IsTypeOf<Wall>())
+			{
+				return true;
+			}
+		}
+	}
+	return false; // 예상치 못한 처리 - 이동 불가
+}
 
 void GameLevel::OnInitialized()
 {
@@ -126,6 +145,8 @@ void GameLevel::LoadMap(const std::string& filename)
 	int index = 0;
 	map.clear();
 	map.emplace_back();
+	clearMap.clear();
+	clearMap.emplace_back();
 	
 	//액터 생성에 사용할 위치값
 	Vector2 position;
@@ -148,8 +169,10 @@ void GameLevel::LoadMap(const std::string& filename)
 			position.x = 0;
 			++position.y;
 			map.emplace_back();
+			clearMap.emplace_back();
 			continue;
 		}
+		clearMap.emplace_back(0);
 		if (mapCharacter == '#')
 		{
 			map[position.y].emplace_back(1);

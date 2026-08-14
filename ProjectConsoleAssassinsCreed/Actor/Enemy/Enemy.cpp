@@ -79,17 +79,17 @@ void Enemy::Tick(float deltaTime)
 }
 // 시야 범위 내에 Player가 5발각된다면 Calling 상태로 진입
 // 이미 Call이 호출된 상태라면 Tracking 호출
-// 발각 위치를 갖고 간다.
-void Enemy::Calling(const Vector2& spotOfDetection)
-{
-	//TODO CallArea 객체 만들고 거기로 향하게 Move 찍는 함수.
-}
-
-// 모든 Enemy Awake, Move Call완료 시 caller = false;
-void Enemy::Call(const Vector2& spotOfDetection)
-{
-	//TODO CallArea 객체 만들고 충돌 처리? 하면 될듯?
-}
+//// 발각 위치를 갖고 간다.
+//void Enemy::Calling(const Vector2& spotOfDetection)
+//{
+//	//TODO CallArea 객체 만들고 거기로 향하게 Move 찍는 함수.
+//}
+//
+//// 모든 Enemy Awake, Move Call완료 시 caller = false;
+//void Enemy::Call(const Vector2& spotOfDetection)
+//{
+//	//TODO CallArea 객체 만들고 충돌 처리? 하면 될듯?
+//}
 
 std::vector<Vector2> Enemy::FindRoute(const Vector2& destination)
 {
@@ -102,7 +102,7 @@ std::vector<Vector2> Enemy::FindRoute(const Vector2& destination)
 	return moveStack;
 }
 
-//틱마다 호출되고 moveSpeed에 비례해 빠르게 이동하며 한 칸마다 이동방향 갱신.
+//틱마다 호출되고 moveSpeed에 비례한 속도로 이동하며 한 칸마다 이동방향 갱신.
 void Enemy::Move(const Vector2& direction, float deltaTime)
 {
 	std::shared_ptr<GameLevel> level = Cast<GameLevel>(GetOwner());
@@ -122,10 +122,6 @@ void Enemy::Move(const Vector2& direction, float deltaTime)
 			--moveIndex;
 		}
 	}
-}
-
-void Enemy::Attack(int range, const Vector2& face, float deltaTime)
-{
 }
 
 void Enemy::Awake()
@@ -160,15 +156,121 @@ bool Enemy::Searching()
 	{
 		relativeAngle = 0;
 	}
-	if ((sightRange > distance)
-		&& (sightDegree > relativeAngle && relativeAngle > -1 * sightDegree))
+	// 직선 경로
+	std::vector<Vector2> rayDirectionQueue = RayDirectionQueueInsert(myPos);
+	std::shared_ptr<GameLevel> level = Cast<GameLevel>(GetOwner());
+	isWall = false;
+	for (Vector2 path : rayDirectionQueue)
 	{
-		return true;
+		isWall = level->IsWall(path);
+		if (isWall)
+		{
+			break;
+		}
 	}
-	if (sightRange / 4 > distance)
+	if (!isWall)
 	{
-		if (sleep) Awake();
-		return true;
+		if (sightRange / 4 > distance)
+		{
+			if (sleep) Awake();
+			return true;
+		}
+		else if ((sightRange > distance)
+			&& (sightDegree > relativeAngle
+				&& relativeAngle > -1 * sightDegree)
+			)
+		{
+			return true;
+		}
 	}
 	return false;
 }
+
+Vector2 Enemy::FacingDirection(const Vector2& currentPosition)
+{
+	Vector2 playerPos = Renderer::Get().GetPlayerPosition();
+	float innerProduct = static_cast<float>(
+		(playerPos.x - currentPosition.x) * rightVector.x
+		+ (playerPos.y - currentPosition.y) * rightVector.y
+		);
+	int rayDistance = static_cast<float>(std::sqrt(
+		std::pow(playerPos.x - currentPosition.x, 2)
+		+ std::pow(playerPos.y - currentPosition.y, 2)
+	));
+	float absFace = static_cast<float>(std::sqrt(
+		std::pow(rightVector.x, 2)
+		+ std::pow(rightVector.y, 2)
+	));
+	if (rayDistance > 0)
+	{
+		facingAngle = acos(innerProduct / (rayDistance * absFace)) * ANGLE;
+	}
+	if (playerPos.y - currentPosition.y < 0)
+	{
+		if (facingAngle < 23)
+		{
+			return Vector2(1, 0);
+		}
+		else if (facingAngle > 23
+			&& facingAngle < 68)
+		{
+			return Vector2(1, -1);
+		}
+		else if (facingAngle > 68
+			&& facingAngle < 113)
+		{
+			return Vector2(0, -1);
+		}
+		else if (facingAngle > 113
+			&& facingAngle < 158)
+		{
+			return Vector2(-1, -1);
+		}
+		else if (facingAngle > 158)
+		{
+			return Vector2(-1, 0);
+		}
+	}
+	else
+	{
+		if (facingAngle < 23)
+		{
+			return Vector2(1, 0);
+		}
+		else if (facingAngle > 23
+			&& facingAngle < 68)
+		{
+			return Vector2(1, 1);
+		}
+		else if (facingAngle > 68
+			&& facingAngle < 113)
+		{
+			return Vector2(0, 1);
+		}
+		else if (facingAngle > 113
+			&& facingAngle < 158)
+		{
+			return Vector2(-1, 1);
+		}
+		else if (facingAngle > 158)
+		{
+			return Vector2(-1, 0);
+		}
+	}
+	return Vector2(0, 0);
+}
+
+std::vector<Vector2> Enemy::RayDirectionQueueInsert(const Vector2& currentPosition)
+{
+	std::vector<Vector2> rayDirectionQueue;
+	Vector2 pos = currentPosition;
+	Vector2 playerPos = Renderer::Get().GetPlayerPosition();
+	while (pos != playerPos)
+	{
+		Vector2 faceDirction = FacingDirection(pos);
+		pos = pos + faceDirction;
+		rayDirectionQueue.emplace_back(pos);
+	}
+	return rayDirectionQueue;
+}
+

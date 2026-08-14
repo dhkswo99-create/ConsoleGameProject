@@ -48,6 +48,6 @@ private:
 	//플레이어 방향
 	Craft::Vector2 face;
 
-	float moveSpeed = 50.0f;
+	float moveSpeed = 10.0f;
 };
 

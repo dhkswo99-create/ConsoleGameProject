@@ -1,0 +1,144 @@
+﻿#include "Arrow.h"
+
+#define ANGLE 180/3.14
+
+#include <Render/Renderer.h>
+#include <cmath>
+
+using namespace Craft;
+using ArrowFrame = Arrow::ArrowFrame;
+static const ArrowFrame arrow[] =
+{
+	{ L"→", 0.2f, Color::Red },
+	{ L"↗", 0.2f, Color::Red },
+	{ L"↑", 0.2f, Color::Red },
+	{ L"↖", 0.2f, Color::Red },
+	{ L"←", 0.2f, Color::Red },
+	{ L"↙", 0.2f, Color::Red },
+	{ L"↓", 0.2f, Color::Red },
+	{ L"↘", 0.2f, Color::Red }
+
+};
+
+Arrow::Arrow(const Vector2& arrowPath)
+	: super(L" ", arrowPath,  Color::Red)
+{
+	Vector2 face = FacingDirection(GetPosition());
+	int faceCheck = face.x * 3 + face.y;
+	switch (faceCheck)
+	{
+	case 1: //하단 ( x = 0 y = 1 ) 
+		this->image = L"↓";
+		break;
+	case 2: //우상단 ( x =1 y = -1 )
+		this->image = L"↗";
+		break;
+	case 3: //우 ( x = 1 y = 0 )
+		this->image = L"→";
+		break;
+	case 4: //우하단 ( x = 1 y = 1 )
+		this->image = L"↘";
+		break;
+	case -1: //상단
+		this->image = L"↑";
+		break;
+	case -2: //좌하단
+		this->image = L"↙";
+		break;
+	case -3: //좌
+		this->image = L"←";
+		break;
+	case -4: //좌상단
+		this->image = L"↖";
+		break;
+	}
+}
+
+void Arrow::Tick(float deltaTime)
+{
+	super::Tick(deltaTime);
+
+	timer.Tick(deltaTime);
+	if (!timer.IsTimeOut())
+	{
+		return;
+	}
+	Destroy();
+
+	timer.Reset();
+}
+Vector2 FacingDirection(const Vector2& currentPosition)
+{
+	Vector2 playerPos = Renderer::Get().GetPlayerPosition();
+	Vector2 rightVector = Vector2(1, 0);
+	float innerProduct = static_cast<float>(
+		(playerPos.x - currentPosition.x) * rightVector.x
+		+ (playerPos.y - currentPosition.y) * rightVector.y
+		);
+	float rayDistance = static_cast<float>(std::sqrt(
+		std::pow(playerPos.x - currentPosition.x, 2)
+		+ std::pow(playerPos.y - currentPosition.y, 2)
+	));
+	float absFace = static_cast<float>(std::sqrt(
+		std::pow(rightVector.x, 2)
+		+ std::pow(rightVector.y, 2)
+	));
+	double facingAngle = 0;
+	if (rayDistance > 0)
+	{
+		facingAngle = acos(innerProduct / (rayDistance * absFace)) * ANGLE;
+	}
+	if (playerPos.y - currentPosition.y < 0)
+	{
+		if (facingAngle < 23)
+		{
+			return Vector2(1, 0);
+		}
+		else if (facingAngle > 23
+			&& facingAngle < 68)
+		{
+			return Vector2(1, -1);
+		}
+		else if (facingAngle > 68
+			&& facingAngle < 113)
+		{
+			return Vector2(0, -1);
+		}
+		else if (facingAngle > 113
+			&& facingAngle < 158)
+		{
+			return Vector2(-1, -1);
+		}
+		else if (facingAngle > 158)
+		{
+			return Vector2(-1, 0);
+		}
+	}
+	else
+	{
+		if (facingAngle < 23)
+		{
+			return Vector2(1, 0);
+		}
+		else if (facingAngle > 23
+			&& facingAngle < 68)
+		{
+			return Vector2(1, 1);
+		}
+		else if (facingAngle > 68
+			&& facingAngle < 113)
+		{
+			return Vector2(0, 1);
+		}
+		else if (facingAngle > 113
+			&& facingAngle < 158)
+		{
+			return Vector2(-1, 1);
+		}
+		else if (facingAngle > 158)
+		{
+			return Vector2(-1, 0);
+		}
+	}
+	return Vector2(0, 0);
+}

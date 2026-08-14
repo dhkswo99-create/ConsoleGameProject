@@ -16,7 +16,7 @@ public:
 
 	virtual void Tick(float deltaTime) override;
 
-	void Attack(int range, const Vector2& face, float deltaTime) override;
+	void Attack(int range, const Vector2& face, float deltaTime);
 
 	void WillAttack();
 
@@ -36,11 +36,6 @@ private:
 
 	bool doAttack = false;
 	bool doneAttack = true;
-
-	Vector2 rightVector = Vector2::Right;
-
-	double facingAngle;
-
 	Timer delay;
 	int range = 3;
 };

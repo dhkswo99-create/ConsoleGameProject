@@ -3,7 +3,7 @@
 #define ANGLE 180/3.14
 
 #include <Level/GameLevel.h>
-#include <Render//Renderer.h>
+#include <Render/Renderer.h>
 #include <Actor/Sword.h>
 #include <cmath>
 
@@ -14,7 +14,7 @@ Guard::Guard(const Vector2& position)
 {
 	range = 3;
 	sightRange = 8;
-	moveSpeed = 10.0f;
+	moveSpeed = 7.0f;
 	sortingOrder = 3;
 	castDelay = 1.0f;
 	attackDelay = 0.3f;
@@ -30,7 +30,7 @@ void Guard::Tick(float deltaTime)
 	delay.Tick(deltaTime);
 
 
-	if (InAttackRange())
+	if (InAttackRange() && !isWall)
 	{
 		FacePlayer();
 		WillAttack();
@@ -73,8 +73,6 @@ void Guard::Tick(float deltaTime)
 
 void Guard::Attack(int range, const Vector2&face, float deltaTime)
 {
-	super::Attack(range, face, deltaTime);
-
 	std::shared_ptr<GameLevel> level = Cast<GameLevel>(GetOwner());
 	std::shared_ptr<Level> owner = GetOwner();
 	if (owner)
@@ -96,84 +94,7 @@ void Guard::WillAttack()
 
 void Guard::FacePlayer()
 {
-	Vector2 playerPos = Renderer::Get().GetPlayerPosition();
-	Vector2 myPos = GetPosition();
-	float innerProduct = static_cast<float>(
-		(playerPos.x - myPos.x) * rightVector.x 
-		+ (playerPos.y - myPos.y) * rightVector.y
-		);
-
-	float absFace = static_cast<float>(std::sqrt(
-		std::pow(rightVector.x, 2)
-		+ std::pow(rightVector.y, 2)
-	));
-	if (distance > 0)
-	{
-		facingAngle = acos(innerProduct / (distance * absFace)) * ANGLE;
-	}
-	if (playerPos.y - myPos.y < 0)
-	{
-		if (facingAngle < 23)
-		{
-			face.x = 1;
-			face.y = 0;
-		}
-		else if (facingAngle > 23
-			&& facingAngle < 68)
-		{
-			face.x = 1;
-			face.y = -1;
-		}
-		else if (facingAngle > 68
-			&& facingAngle <113)
-		{
-			face.x = 0;
-			face.y = -1;
-		}
-		else if (facingAngle > 113
-			&& facingAngle < 158)
-		{
-			face.x = -1;
-			face.y = -1;
-		}
-		else if (facingAngle > 158)
-		{
-			face.x = -1;
-			face.y = 0;
-		}
-	}
-	else
-	{
-		if (facingAngle < 23)
-		{
-			face.x = 1;
-			face.y = 0;
-		}
-		else if (facingAngle > 23
-			&& facingAngle < 68)
-		{
-			face.x = 1;
-			face.y = 1;
-		}
-		else if (facingAngle > 68
-			&& facingAngle < 113)
-		{
-			face.x = 0;
-			face.y = 1;
-		}
-		else if (facingAngle > 113
-			&& facingAngle < 158)
-		{
-			face.x = -1;
-			face.y = 1;
-		}
-		else if (facingAngle > 158)
-		{
-			face.x = -1;
-			face.y = 0;
-		}
-	}
-
+	face = FacingDirection(GetPosition());
 }
 
 
