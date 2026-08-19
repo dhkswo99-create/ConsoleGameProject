@@ -1,5 +1,6 @@
 ﻿#include "GameLevel.h"
 #include <Actor/Wall.h>
+#include <Game/Game.h>
 #include <Actor/Ground.h>
 #include <Actor/Enemy/Guard.h>
 #include <Actor/Enemy/Archer.h>
@@ -108,32 +109,10 @@ void GameLevel::Draw()
 {
 	
 	//게임 클리어표시
-	if (isGameOver)
+	if (isGameOver
+		|| targetClear
+		|| clientClear)
 	{
-		camera->SetCameraView(Renderer::Get().GetPlayerPosition());
-		Renderer::Get().Submit(
-			L"GameOver!!",
-			Vector2(30, 0)
-		);
-		camera->Destroy();
-	}
-	else if (targetClear)
-	{
-		camera->SetCameraView(Renderer::Get().GetPlayerPosition());
-		Renderer ::Get().Submit(
-			L"The target is dead.But was it really the right choice... ?",
-			Vector2(40, 20)
-		);
-		camera->Destroy();
-	}
-	else if (clientClear)
-	{
-		camera->SetCameraView(Renderer::Get().GetPlayerPosition());
-		Renderer::Get().Submit(
-			L"The client is dead.But was it really the right choice... ?",
-			Vector2(40, 15)
-		);
-		camera->Destroy();
 	}
 	else
 	{
@@ -145,6 +124,17 @@ void GameLevel::Tick(float deltaTime)
 {
 	super::Tick(deltaTime);
 	SetGameStatus();
+	Game& game = dynamic_cast<Game&>(Engine::Get());
+
+	// Game에 결과 저장
+	game.SetGameStatus(targetClear, clientClear, isGameOver);
+
+	if (isGameOver
+		|| targetClear
+		|| clientClear)
+	{
+		game.ToggleMenu();
+	}
 }
 
 void GameLevel::LoadMap(const std::string& filename)  

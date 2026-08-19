@@ -28,6 +28,30 @@ void Game::ToggleMenu()
 
 }
 
+void Game::RestartGame() 
+{
+	// 새로운 GameLevel 생성
+	std::shared_ptr<GameLevel> newGameLevel
+		= std::make_shared<GameLevel>();
+
+	// 기존 게임 레벨을 새로운 게임 레벨로 교체
+	levelList[static_cast<int>(State::GamePlay)] = newGameLevel;
+
+	// 다음 프레임에 새로운 게임 레벨로 전환 요청
+	nextLevel = newGameLevel;
+
+	// 현재 상태를 게임 플레이로 변경
+	state = State::GamePlay;
+}
+
+void Game::SetGameStatus(bool target, bool client, bool gameOver)
+{
+	targetClear = target;
+	clientClear = client;
+	isGameOver = gameOver;
+}
+
+
 
 
 

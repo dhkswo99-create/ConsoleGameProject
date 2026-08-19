@@ -22,7 +22,16 @@ public:
 	// 메뉴/게임 레벨을 전환하는 함수
 	void ToggleMenu();
 
+	void RestartGame();
+
+	void SetGameStatus(bool target, bool client, bool gameOver);
+
+	bool targetClear = false;
+	bool clientClear = false;
+	bool isGameOver = false;
+
 private:
+
 	//메뉴 레벨과 게임 레벨을 관리할 배열
 	std::vector<std::shared_ptr<Craft::Level>> levelList;
 

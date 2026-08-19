@@ -11,12 +11,12 @@ Archer::Archer(const Vector2& position)
 	//도망 범위
 	runRange = 4.0f;
 	//공격 범위
-	range = 12;
+	range = 14;
 	sightRange = 15;
 	moveSpeed = 5.0f;
 	sortingOrder = 3;
-	castDelay = 1.7f;
-	attackDelay = 1.0f;
+	castDelay = 1.0f;
+	attackDelay = 0.5f;
 
 	face = Vector2::Left;
 	//충돌 허용

@@ -11,7 +11,7 @@ MenuLevel::MenuLevel()
 	//메뉴 아이템 생성 
 	itemList.emplace_back(
 		std::make_unique<MenuItem>(
-			"Resume Game",
+			L"Resume Game",
 			[]()
 			{
 				//메뉴 토글 함수 호출
@@ -22,7 +22,7 @@ MenuLevel::MenuLevel()
 	);
 	itemList.emplace_back(
 		std::make_unique<MenuItem>(
-			"Quit Game",
+			L"Quit Game",
 			[]()
 			{
 				// 게임 종료 호출

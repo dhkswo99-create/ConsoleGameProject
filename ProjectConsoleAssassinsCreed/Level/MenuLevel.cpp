@@ -1,6 +1,7 @@
 ﻿#include "MenuLevel.h"
 #include <Game/Game.h>
 #include <Input/Input.h>
+#include <Actor/Camera.h>
 #include <Render/Renderer.h>
 #include <cassert>
 
@@ -8,7 +9,45 @@ using namespace Craft;
 
 MenuLevel::MenuLevel()
 {
+	Game& game = dynamic_cast<Game&>(Engine::Get());
+	if (game.isGameOver)
+	{
+
+		//Renderer::Get().SetCameraView(Renderer::Get().GetPlayerPosition());
+		Renderer::Get().Submit(
+			L"GameOver!!",
+			Vector2::Zero
+		);
+	}
+	else if (game.targetClear)
+	{
+		Renderer::Get().SetCameraView(Renderer::Get().GetPlayerPosition());
+		Renderer::Get().Submit(
+			L"The target is dead.But was it really the right choice... ?",
+			Vector2::Zero
+		);
+	}
+	else if (game.clientClear)
+	{
+		Renderer::Get().SetCameraView(Renderer::Get().GetPlayerPosition());
+		Renderer::Get().Submit(
+			L"The client is dead.But was it really the right choice... ?",
+			Vector2::Zero
+		);
+	}
+
 	//메뉴 아이템 생성 
+	itemList.emplace_back(
+		std::make_unique<MenuItem>(
+			L"Restart Game",
+			[]()
+			{
+				//메뉴 토글 함수 호출
+				Game& game = dynamic_cast<Game&>(Engine::Get());
+				game.RestartGame();
+			}
+		)
+	);
 	itemList.emplace_back(
 		std::make_unique<MenuItem>(
 			L"Resume Game",

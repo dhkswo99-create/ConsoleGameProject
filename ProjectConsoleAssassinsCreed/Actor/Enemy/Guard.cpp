@@ -13,10 +13,10 @@ Guard::Guard(const Vector2& position)
 	:super(L"G", position, Color::Yellow)
 {
 	range = 3;
-	sightRange = 8;
-	moveSpeed = 7.0f;
+	sightRange = 15;
+	moveSpeed = 8.0f;
 	sortingOrder = 3;
-	castDelay = 1.0f;
+	castDelay = 0.6f;
 	attackDelay = 0.3f;
 
 	face = Vector2::Left;

@@ -25,7 +25,7 @@ Arrow::Arrow(const Vector2& position, const std::vector<Vector2>& arrowPath)
 	: super(L"a", position, Color::Red),
 	arrowPos(arrowPath)
 {
-	timer.SetTargetTime(0.3f);
+	timer.SetTargetTime(0.07f);
 	for (Vector2 path : arrowPath)
 	{
 		Vector2 face = FacingDirection(path);
