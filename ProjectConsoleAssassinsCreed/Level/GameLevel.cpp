@@ -16,6 +16,8 @@
 
 using namespace Craft;
 
+
+
 bool GameLevel::CanMove(const Craft::Vector2& playerPosition, const Craft::Vector2& nextPosition)
 {
 	//게임 클리어인 경우 처리 안함
@@ -67,6 +69,14 @@ bool GameLevel::CanAttack(const Craft::Vector2& playerPosition, const Craft::Vec
 		}
 	}
 	return false;
+}
+
+void GameLevel::IsSighted()
+{
+	for (const std::shared_ptr<Actor>& actor : actorList)
+	{
+
+	}
 }
 
 // 현재 위치가 벽인지
@@ -239,7 +249,7 @@ void GameLevel::LoadMap(const std::string& filename)
 		case 'p': //플레이어
 			SpawnActor<Ground>(position); //플레이어가 이동한 후에 바닥
 			camera = SpawnActor<Camera>();
-			SpawnActor<Player>(position);
+			player = SpawnActor<Player>(position);
 			break;
 		}
 

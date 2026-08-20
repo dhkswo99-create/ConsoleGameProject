@@ -49,6 +49,9 @@ namespace Craft
 		inline void SetOwner(std::weak_ptr<Level> newOwner) { owner = newOwner; }
 
 		inline Vector2 GetPosition() const { return position; }
+		
+		inline bool GetIsSighted() const { return isSighted; }
+		void SetIsSighted(bool newIsSighted) { this->isSighted =  newIsSighted; }
 
 		void SetPosition(const Vector2& newPosition);
 
@@ -91,6 +94,7 @@ namespace Craft
 
 
 	protected:
+		bool isSighted;
 		//충돌 가능 여부
 		bool collisionEnabled = false;
 		//BeginPlay 생에 한번만 처리

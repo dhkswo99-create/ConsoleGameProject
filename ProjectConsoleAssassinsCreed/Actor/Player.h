@@ -37,7 +37,7 @@ private:
 	Timer buff;
 	
 	// 사거리
-	int range = 5;
+	int range = 3;
 
 	float xPosition = 0.0f;
 	float yPosition = 0.0f;

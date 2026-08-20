@@ -4,6 +4,7 @@
 
 
 class Camera;
+class Player;
 //소코반 게임 레벨 클래스
 //게임 클리어 등 게임 규칙 및 전반을 관리
 class GameLevel :public Craft::Level
@@ -22,6 +23,8 @@ public:
 		const Craft::Vector2& playerPosition,
 		const Craft::Vector2& face
 	);
+
+	void IsSighted();
 
 	bool IsWall(const Craft::Vector2& currentPositon);
 
@@ -58,6 +61,7 @@ private:
 	std::vector<std::vector<int>> map;
 	std::vector<std::vector<int>> clearMap;
 	std::shared_ptr<Camera> camera;
+	std::shared_ptr<Player> player;
 };
 
 
