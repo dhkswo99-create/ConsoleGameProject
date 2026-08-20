@@ -2,6 +2,7 @@
 
 #include <Actor/ACTOR.H>
 #include <vector>
+#include <Level/GameLevel.h>
 
 using namespace Craft;
 class Enemy : public Actor
@@ -41,7 +42,7 @@ public:
 	Vector2 FacingDirection(const Vector2& currentPostion);
 
 	// Bresenham 알고리즘으로 FacingDirection으로 받은 vector<Vector2> 큐를 리턴.
-	std::vector<Vector2> RayDirectionQueueInsert(const Vector2& currentPosition);
+	std::vector<Vector2> RayDirectionQueueInsert(const Vector2& actorPosition);
 
 	// 게터
 	double GetSightDegree() { return sightDegree; }
@@ -66,7 +67,7 @@ protected:
 	//사거리
 	int range = 7;
 	//시야반경
-	float sightRange =  10;
+	float sightRange = 10;
 	//이동속도
 	float moveSpeed = 3.0f;
 	//플레이어와의 거리
@@ -75,9 +76,9 @@ protected:
 	bool sleep = false;
 	//찾았는지
 	bool found = false;
-	
+
 	Vector2 face = Vector2::Zero;
-	
+
 	// 최적 경로를 저장할 공간
 	// path를 하나씩 꺼내 이동하게 할 것.
 	int moveIndex = 0;
@@ -101,6 +102,5 @@ private:
 
 	// 게임 레벨에서 불러올 map 데이터
 	std::vector<std::vector<int>> map;
-
 };
 

@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include <Render/Renderer.h>
+#include <Level/GameLevel.h>
 
 using namespace Craft;
 
@@ -14,8 +15,9 @@ void Camera::Tick(float deltaTime)
 	super::Tick(deltaTime);
 
 	// 카메라가 보여줄 위치
-	cameraView = Renderer::Get().GetPlayerPosition();
-	playerFace = Renderer::Get().GetPlayerFace();
+	std::shared_ptr<GameLevel> level = Cast<GameLevel>(GetOwner());
+	cameraView = level->GetPlayerPosition();  //TODO
+	playerFace = level->GetPlayerFace();  //TODO
 	// 기본 카메라 조정
 	cameraView.x -= 45;
 	cameraView.y -= 15;
@@ -54,6 +56,6 @@ void Camera::Tick(float deltaTime)
 		break;
 	}
 
-	Renderer::Get().SetCameraView(cameraView);
+	Renderer::Get().SetCameraView(cameraView);  // 이건 렌더가 알아야 함..
 	
 }

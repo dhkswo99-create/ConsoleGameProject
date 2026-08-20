@@ -82,6 +82,7 @@ void Archer::Attack(int range, const Vector2& face, float deltaTime)
 	std::shared_ptr<GameLevel> level = Cast<GameLevel>(GetOwner());
 	std::shared_ptr<Level> owner = GetOwner();
 	std::vector<Vector2> arrowPath = RayDirectionQueueInsert(GetPosition());
+	Vector2 pPo = level->GetPlayerPosition();
 	if (owner)
 	{
 		if (!isWall)

@@ -14,6 +14,8 @@
 #include <iostream>
 #include <cassert>
 
+#define ANGLE 180/3.14
+
 using namespace Craft;
 
 
@@ -75,7 +77,7 @@ void GameLevel::IsSighted()
 {
 	for (const std::shared_ptr<Actor>& actor : actorList)
 	{
-
+		actor->SetIsSighted(SearchingActorGL(actor));
 	}
 }
 
@@ -105,6 +107,93 @@ bool GameLevel::IsWall(const Craft::Vector2& currentPositon)
 	return false; // 예상치 못한 처리 - 이동 불가
 }
 
+std::vector<Vector2> GameLevel::RayDirectionQueueInsertGL(const Vector2& actorPosition)
+{
+	std::vector<Vector2> rayDirectionQueue;
+	Vector2 currentPos = GetPlayerPosition();
+	Vector2 dPos = actorPosition;
+	while (dPos != currentPos)
+	{
+		Vector2 faceDirction = FacingDirectionGL(currentPos);
+		currentPos = currentPos + faceDirction;
+		rayDirectionQueue.emplace_back(currentPos);
+	}
+	return rayDirectionQueue;
+}
+
+Vector2 GameLevel::FacingDirectionGL(const Vector2& actorPosition)
+{
+	Vector2 playerPos = GetPlayerPosition();
+	float innerProduct = static_cast<float>(
+		(- playerPos.x + actorPosition.x) * 1
+		+ (- playerPos.y + actorPosition.y) * 0
+		);
+	float rayDistance = static_cast<float>(std::sqrt(
+		std::pow(playerPos.x - actorPosition.x, 2)
+		+ std::pow(playerPos.y - actorPosition.y, 2)
+	));
+	float absFace = 1;
+	double facingAngle = 0;
+	if (rayDistance > 0)
+	{
+		facingAngle = acos(innerProduct / (rayDistance * absFace)) * ANGLE;
+	}
+	if (playerPos.y - actorPosition.y < 0)
+	{
+		if (facingAngle < 23)
+		{
+			return Vector2(1, 0);
+		}
+		else if (facingAngle > 23
+			&& facingAngle < 68)
+		{
+			return Vector2(1, -1);
+		}
+		else if (facingAngle > 68
+			&& facingAngle < 113)
+		{
+			return Vector2(0, -1);
+		}
+		else if (facingAngle > 113
+			&& facingAngle < 158)
+		{
+			return Vector2(-1, -1);
+		}
+		else if (facingAngle > 158)
+		{
+			return Vector2(-1, 0);
+		}
+	}
+	else
+	{
+		if (facingAngle < 23)
+		{
+			return Vector2(1, 0);
+		}
+		else if (facingAngle > 23
+			&& facingAngle < 68)
+		{
+			return Vector2(1, 1);
+		}
+		else if (facingAngle > 68
+			&& facingAngle < 113)
+		{
+			return Vector2(0, 1);
+		}
+		else if (facingAngle > 113
+			&& facingAngle < 158)
+		{
+			return Vector2(-1, 1);
+		}
+		else if (facingAngle > 158)
+		{
+			return Vector2(-1, 0);
+		}
+	}
+	return Vector2(0, 0);
+}
+// 위 두 함수들을 이용해 플레이어 시야 내에 객체가 존재하는지 판별.
+
 void GameLevel::OnInitialized()
 {
 	//상위 개체 호출
@@ -117,7 +206,7 @@ void GameLevel::OnInitialized()
 
 void GameLevel::Draw()
 {
-	
+	IsSighted();
 	//게임 클리어표시
 	if (isGameOver
 		|| targetClear
@@ -323,3 +412,56 @@ void GameLevel::SetGameStatus()
 	}
 }
 
+
+bool GameLevel::SearchingActorGL(const std::shared_ptr <Actor>& actor)
+{
+	Vector2 playerPos = GetPlayerPosition();
+	Vector2 actorPos = actor->GetPosition();
+	float distance = static_cast<float>(std::sqrt(
+		std::pow(playerPos.x - actorPos.x, 2)
+		+ std::pow(playerPos.y - actorPos.y, 2)
+	));
+	if (distance < 5)
+	{
+		return true;
+	}
+	Vector2 playerFace = GetPlayerFace();
+	float innerProduct = static_cast<float>(
+		(- playerPos.x + actorPos.x) * playerFace.x + (- playerPos.y + actorPos.y) * playerFace.y
+		);
+
+	float absFace = static_cast<float>(std::sqrt(
+		std::pow(playerFace.x, 2)
+		+ std::pow(playerFace.y, 2)
+	));
+	double relativeAngle = 0;
+	if (distance * absFace)
+	{
+		relativeAngle = acos(innerProduct / (distance * absFace)) * ANGLE;
+	}
+	else
+	{
+		relativeAngle = 0;
+	}
+
+	if (distance < 15 && relativeAngle < 50)
+	{
+		std::vector<Vector2> rayDirectionQueue = RayDirectionQueueInsertGL(actorPos);
+		bool isWall = false;
+		for (Vector2 path : rayDirectionQueue)
+		{
+			isWall = IsWall(path);
+			if (isWall)
+			{
+				break;
+			}
+		}
+		if (!isWall)
+		{
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}

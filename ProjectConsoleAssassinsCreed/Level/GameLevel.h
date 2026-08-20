@@ -1,10 +1,10 @@
 ﻿#pragma once
 
 #include <Level/Level.h>
+#include <Actor/Player.h>
 
 
 class Camera;
-class Player;
 //소코반 게임 레벨 클래스
 //게임 클리어 등 게임 규칙 및 전반을 관리
 class GameLevel :public Craft::Level
@@ -27,6 +27,13 @@ public:
 	void IsSighted();
 
 	bool IsWall(const Craft::Vector2& currentPositon);
+	
+	std::vector<Craft::Vector2> RayDirectionQueueInsertGL(const Craft::Vector2& actorPosition);
+	Craft::Vector2 FacingDirectionGL(const Craft::Vector2& currentPosition);
+	bool SearchingActorGL(const std::shared_ptr<Craft::Actor>& actor);
+
+	Craft::Vector2 GetPlayerPosition() const { return player->GetPosition(); }
+	Craft::Vector2 GetPlayerFace() const { return player->GetFace(); }
 
 	std::vector<std::vector<int>> GetMap() { return map; }
 	std::vector<std::vector<int>> GetClearMap() { return clearMap; }
@@ -44,7 +51,6 @@ private:
 	//맵 로드 함수
 	void LoadMap(const std::string& filename);
 
-	//게임 오버 
 
 
 private:

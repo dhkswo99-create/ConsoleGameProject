@@ -16,7 +16,7 @@ public:
 
 	void Attack(int range, const Vector2& face, float deltaTime);
 
-	void WillAttack();
+	void WillAttack(); 
 
 	void FacePlayer();
 	bool InAttackRange() { return distance < range; }

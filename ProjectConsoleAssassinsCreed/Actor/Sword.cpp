@@ -14,6 +14,7 @@ static const SwordFrame sword =
 Sword::Sword(const Vector2& position)
 	: Actor( sword.frame , position, sword.color)
 {
+	isSighted = true;
 	sortingOrder = 1;
 	timer.SetTargetTime(sword.playTime);
 	//충돌 허용

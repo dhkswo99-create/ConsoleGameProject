@@ -4,7 +4,6 @@
 
 namespace Craft
 {
-	Vector2 playerFace = Vector2::Zero;
 	Actor::Actor(
 		const std::wstring& image,
 		const Vector2& position,
@@ -37,7 +36,7 @@ namespace Craft
 
 		//렌더러에 필요한 데이터 제출.
 		Renderer::Get().Submit(
-			image, position, color, sortingOrder);
+			image, position, color, sortingOrder, isSighted);
 	}
 	void Actor::OnCollision(const std::shared_ptr<Actor>& other)
 	{
@@ -60,12 +59,13 @@ namespace Craft
 		}
 		position = newPosition; //연산자 모두 오버로딩한 연산자.
 	}
-	void Actor::SetPlayerFace(const Vector2& newface)
+	void Actor::SetFace(const Vector2& newFace)
 	{
-		if (playerFace == newface)
+		//변경하려는 위치값이 기존값과 동일하면 종료
+		if (face== newFace)
 		{
 			return;
 		}
-		playerFace = newface;
+		face= newFace; //연산자 모두 오버로딩한 연산자.
 	}
 }

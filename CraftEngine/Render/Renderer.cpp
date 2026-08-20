@@ -82,7 +82,7 @@ namespace Craft
 		const Vector2& position,
 		Color color,
 		int sortingOrder,
-		const Vector2& Playerface
+		bool isSighted
 	)
 	{
 		//viewPosition -> 플레이어 중심으로 렌더링
@@ -93,6 +93,7 @@ namespace Craft
 			- cameraView;
 		command.color = color;
 		command.sortingOrder = sortingOrder;
+		command.isSighted = isSighted;
 		renderQueue.emplace_back(command);
 	}
 
@@ -134,7 +135,10 @@ namespace Craft
 			{
 				continue;
 			}
-
+			if (command.isSighted == false)
+			{
+				continue;
+			}
 			int width = 0;
 			int height = 1;
 

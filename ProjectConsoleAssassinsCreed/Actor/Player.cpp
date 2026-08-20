@@ -12,6 +12,7 @@ Player::Player(const Vector2& position)
 {
 	// 다른 객체들보다 높은 우선 순위를 둘 것.
 	// Enemy 객체와 벽 객체와는 Collision 시 overlap 불가
+	isSighted = true;
 	face = Vector2::Right;
 	moveSpeed = 10.0f;
 	sortingOrder = 10;
@@ -23,6 +24,22 @@ void Player::Tick(float deltaTime)
 {
 	//상위 객체 tick 호출
 	super::Tick(deltaTime);
+
+	//프레임 관련 문자열
+	const int size = 256;
+	char fpsString[size] = {};
+
+	sprintf_s(
+		fpsString,
+		size,
+		"dt: %f | fps: %.1f",
+		deltaTime,
+		(1.0f) / deltaTime
+	);
+
+	//콘솔 창 이름에 값 설정
+	SetConsoleTitleA(fpsString);
+
 
 	// ESC 종료
 	if (Input::Get().GetKeyDown(VK_ESCAPE))
@@ -87,7 +104,7 @@ void Player::Tick(float deltaTime)
 		delay.SetTargetTime(castDelay);
 		if (delay.IsTimeOut())
 		{
-			Attack(range, face, deltaTime);
+ 			Attack(range, face, deltaTime);
 			doneAttack = false;
 			doAttack = false;
 			delay.Reset();
@@ -110,71 +127,66 @@ void Player::Tick(float deltaTime)
 		if (Input::Get().GetKeyDown('D') || Input::Get().GetKeyDown('d'))
 	{
 		this->image = L"→";
-		face.x = 1;
-		face.y = 0;
+		SetFace(Vector2(1,0));
 		if (Input::Get().GetKey('w') || Input::Get().GetKey('W'))
 		{
 			this->image = L"↗";
-			face.y = -1;
+			SetFace(Vector2(1, -1));
 		}
 		if (Input::Get().GetKey('s') || Input::Get().GetKey('S'))
 		{
 			this->image = L"↘";
-			face.y = 1;
+			SetFace(Vector2(1, 1));
 		}
 		
 	}
 		if (Input::Get().GetKeyDown('A') || Input::Get().GetKeyDown('a'))
 	{
 		this->image = L"←";
-		face.x = -1;
-		face.y = 0;
+		SetFace(Vector2(-1, 0));
 		if (Input::Get().GetKey('w') || Input::Get().GetKey('W'))
 		{
 			this->image = L"↖";
-			face.y = -1;
+			SetFace(Vector2(-1, -1));
 		}
 		if (Input::Get().GetKey('s') || Input::Get().GetKey('S'))
 		{
 			this->image = L"↙";
-			face.y = 1;
+			SetFace(Vector2(-1, 1));
 		}
 	}
+
 		if (Input::Get().GetKeyDown('W') || Input::Get().GetKeyDown('w'))
 	{
 		this->image = L"↑";
-		face.y = -1;
-		face.x = 0;
+		SetFace(Vector2(0, -1));
 		if (Input::Get().GetKey('d') || Input::Get().GetKey('D'))
 		{
 			this->image = L"↗";
-			face.x = 1;
+			SetFace(Vector2(1, -1));
 		}
 		if (Input::Get().GetKey('a') || Input::Get().GetKey('A'))
 		{
 			this->image = L"↖";
-			face.x = -1;
+			SetFace(Vector2(-1, -1));
 		}
 	}
 		if (Input::Get().GetKeyDown('S') || Input::Get().GetKeyDown('s'))
 	{
 		this->image = L"↓";
-		face.y = 1;
-		face.x = 0;
+		SetFace(Vector2(0, 1));
 		if (Input::Get().GetKey('a') || Input::Get().GetKey('A'))
 		{
 			this->image = L"↙";
-			face.x = -1;
+			SetFace(Vector2(-1, 1));
 		}
 		if (Input::Get().GetKey('d') || Input::Get().GetKey('D'))
 		{
 			this->image = L"↘";
-			face.x = 1;
+			SetFace(Vector2(1, 1));
 		}
 	}
 
-		Renderer::Get().SetFaceRender(face);
-		Renderer::Get().SetPlayerPosition(position);
 		Move(directionX, directionY, deltaTime);
 		delay.Reset();
 	}
@@ -196,7 +208,7 @@ void Player::Move(float directionX, float directionY, float deltaTime)
 	}
 	else if (-1 > dx)
 	{
-		--xPosition;
+		--xPosition; 
 		dx = 0;
 	}
 	if (dy > 1)

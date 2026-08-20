@@ -8,6 +8,10 @@ class Player : public Craft::Actor
 	TYPE_DECLARATIONS(Player, Actor)
 public:
 	Player(const Craft::Vector2& position);
+	~Player()
+	{
+		SetFace(Craft::Vector2::Zero);
+	}
 
 	void Move(float directionX, float directionY, float deltaTime);
 	
@@ -15,6 +19,7 @@ public:
 	void Attack(const int range, const Craft::Vector2& face, float deltaTime);
 
 	void SetRange(int newRange) { range = newRange; }
+
 
 private:
 	virtual void Tick(float deltaTime) override;
@@ -45,8 +50,6 @@ private:
 	float dx = 0;
 	float dy = 0;
 
-	//플레이어 방향
-	Craft::Vector2 face;
 
 	float moveSpeed = 10.0f;
 };

@@ -48,11 +48,14 @@ namespace Craft
 		//반환
 		inline void SetOwner(std::weak_ptr<Level> newOwner) { owner = newOwner; }
 
-		inline Vector2 GetPosition() const { return position; }
+		Vector2 GetPosition() const { return position; }
+		Vector2 GetFace() const { return face; }
+		
+		inline bool GetIsSighted() const { return isSighted; }
+		void SetIsSighted(bool newIsSighted) { this->isSighted =  newIsSighted; }
 
-		void SetPosition(const Vector2& newPosition);
-
-		void SetPlayerFace(const Vector2& newface);
+		void SetPosition(const Vector2& newposition);
+		void SetFace(const Vector2& newFace);
 
 		void SetColiisionEnabled(bool iscollisionEnabled)
 		{
@@ -91,6 +94,7 @@ namespace Craft
 
 
 	protected:
+		bool isSighted;
 		//충돌 가능 여부
 		bool collisionEnabled = false;
 		//BeginPlay 생에 한번만 처리
@@ -118,6 +122,7 @@ namespace Craft
 
 		//위치
 		Vector2 position;
+		Vector2 face;
 
 		//이전 프레임 위치
 		Vector2 previousPosition;

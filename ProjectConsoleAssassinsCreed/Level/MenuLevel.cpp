@@ -9,33 +9,6 @@ using namespace Craft;
 
 MenuLevel::MenuLevel()
 {
-	Game& game = dynamic_cast<Game&>(Engine::Get());
-	if (game.isGameOver)
-	{
-
-		//Renderer::Get().SetCameraView(Renderer::Get().GetPlayerPosition());
-		Renderer::Get().Submit(
-			L"GameOver!!",
-			Vector2::Zero
-		);
-	}
-	else if (game.targetClear)
-	{
-		Renderer::Get().SetCameraView(Renderer::Get().GetPlayerPosition());
-		Renderer::Get().Submit(
-			L"The target is dead.But was it really the right choice... ?",
-			Vector2::Zero
-		);
-	}
-	else if (game.clientClear)
-	{
-		Renderer::Get().SetCameraView(Renderer::Get().GetPlayerPosition());
-		Renderer::Get().Submit(
-			L"The client is dead.But was it really the right choice... ?",
-			Vector2::Zero
-		);
-	}
-
 	//메뉴 아이템 생성 
 	itemList.emplace_back(
 		std::make_unique<MenuItem>(
@@ -75,6 +48,40 @@ void MenuLevel::Tick(float deltaTime)
 {
 	Level::Tick(deltaTime);
 
+	Game& game = dynamic_cast<Game&>(Engine::Get());
+	if (game.isGameOver)
+	{
+		Renderer::Get().SetCameraView(Vector2::Zero); //TODO
+		Renderer::Get().Submit(
+			L"GameOver!!",
+			Vector2::Zero,
+			Color::White,
+			0,
+			true
+		);
+	}
+	else if (game.targetClear)
+	{
+		Renderer::Get().SetCameraView(Vector2::Zero); //TODO
+		Renderer::Get().Submit(
+			L"The target is dead.But was it really the right choice... ?",
+			Vector2::Zero,
+			Color::White,
+			0,
+			true
+		);
+	}
+	else if (game.clientClear)
+	{
+		Renderer::Get().SetCameraView(Vector2::Zero); //TODO
+		Renderer::Get().Submit(
+			L"The client is dead.But was it really the right choice... ?",
+			Vector2::Zero,
+			Color::White,
+			0,
+			true
+		);
+	}
 	//입력 처리 (위/아래 방향키, 엔터, ESC 키)
 	if (Input::Get().GetKeyDown(VK_ESCAPE))
 	{
@@ -123,7 +130,7 @@ void MenuLevel::Draw()
 	*/
 
 	//제목 그리기
-	Renderer::Get().Submit(L"Game", Vector2::Zero);
+	Renderer::Get().Submit(L"", Vector2::Zero);
 
 	// 메뉴 아이템 그리기
 	const int count = static_cast<int>(itemList.size());
@@ -137,7 +144,9 @@ void MenuLevel::Draw()
 		Renderer::Get().Submit(
 			itemList[ix]->text,
 			Vector2(0, 2 + ix),
-			textColor
+			textColor,
+			0,
+			true
 		);
 	}
 }

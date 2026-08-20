@@ -25,10 +25,12 @@ Arrow::Arrow(const Vector2& position, const std::vector<Vector2>& arrowPath)
 	: super(L"a", position, Color::Red),
 	arrowPos(arrowPath)
 {
+	Vector2 destination = arrowPath[arrowPath.size() - 1];
+	isSighted = true;
 	timer.SetTargetTime(0.07f);
 	for (Vector2 path : arrowPath)
 	{
-		Vector2 face = FacingDirection(path);
+		Vector2 face = FacingDirection(path, destination);
 		int faceCheck = face.x * 3 + face.y;
 		switch (faceCheck)
 		{
@@ -99,17 +101,16 @@ void Arrow::OnCollision(const std::shared_ptr<Actor>& other)
 	}
 }
 
-Vector2 Arrow::FacingDirection(const Vector2& currentPosition)
+Vector2 Arrow::FacingDirection(const Vector2& currentPosition, const Vector2 destination)
 {
-	Vector2 playerPos = Renderer::Get().GetPlayerPosition();
 	Vector2 rightVector = Vector2(1, 0);
 	float innerProduct = static_cast<float>(
-		(playerPos.x - currentPosition.x) * rightVector.x
-		+ (playerPos.y - currentPosition.y) * rightVector.y
+		(destination.x - currentPosition.x) * rightVector.x
+		+ (destination.y - currentPosition.y) * rightVector.y
 		);
 	float rayDistance = static_cast<float>(std::sqrt(
-		std::pow(playerPos.x - currentPosition.x, 2)
-		+ std::pow(playerPos.y - currentPosition.y, 2)
+		std::pow(destination.x - currentPosition.x, 2)
+		+ std::pow(destination.y - currentPosition.y, 2)
 	));
 	float absFace = static_cast<float>(std::sqrt(
 		std::pow(rightVector.x, 2)
@@ -120,7 +121,7 @@ Vector2 Arrow::FacingDirection(const Vector2& currentPosition)
 	{
 		facingAngle = acos(innerProduct / (rayDistance * absFace)) * ANGLE;
 	}
-	if (playerPos.y - currentPosition.y < 0)
+	if (destination.y - currentPosition.y < 0)
 	{
 		if (facingAngle < 23)
 		{

@@ -45,6 +45,8 @@ namespace Craft
 
 			//그리기 정렬 순서 값이 크면 우선 순위가 높음.
 			int sortingOrder = -1; // << 경쟁 상황에서 우선 순위를 결정할 때 사용.
+
+			bool isSighted = false;
 		};
 
 	public:
@@ -57,18 +59,8 @@ namespace Craft
 			const Vector2& position,
 			Color color = Color::White,
 			int sortingOrder = 0,
-			const Vector2& playerFace = Vector2::Zero
+			bool isSighted = false
 		);
-		
-		inline void SetFaceRender(const Vector2& newplayerFace) 
-		{ 
-			playerFace = newplayerFace;
-		}
-
-		inline void SetPlayerPosition(const Vector2& position) 
-		{
-			playerPosition = position;
-		}
 
 		inline void SetCameraView(const Vector2& newCameraView) 
 		{
@@ -80,9 +72,6 @@ namespace Craft
 
 		//전역 접근 함수
 		static Renderer& Get();
-
-		inline Vector2 GetPlayerPosition() { return playerPosition; }
-		inline Vector2 GetPlayerFace() { return playerFace; }
 
 	private:
 		//그리기 작업을 시작할 때 프레임(화면)을 지우는 함수.
@@ -104,12 +93,6 @@ namespace Craft
 
 		// 카메라
 		Vector2 cameraView = Vector2::Zero;
-
-		// 플레이어 좌표
-		Vector2 playerPosition = Vector2::Zero;
-
-		// 방향
-		Vector2 playerFace = Vector2::Zero;
 		
 		//이번프레임에 그릴 렌더 명령을 모아두는 배열
 		//큐처럼 사용.

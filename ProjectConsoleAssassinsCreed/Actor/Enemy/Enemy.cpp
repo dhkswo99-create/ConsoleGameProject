@@ -17,21 +17,30 @@ Enemy::Enemy(
 	Color color)
 	:super(image, position, color)
 {
-	
+	isSighted = true;
 }
 
 void Enemy::Tick(float deltaTime)
 {
+	std::shared_ptr<GameLevel> level = Cast<GameLevel>(GetOwner());
 	super::Tick(deltaTime);
 	
 	found = Searching();
 
+	if (found)
+	{
+		SetIsSighted(true);
+	}
+	else
+	{
+		//SetIsSighted(false);
+	}
 	if (!sleep && found)
 	{
 		pathDirection.clear();
 		if (this->IsTypeOf<Guard>())
 		{
-			pathDirection = FindRoute(Renderer::Get().GetPlayerPosition()); //Guard.
+			pathDirection = FindRoute(level->GetPlayerPosition()); //Guard.
 		}
 		else if (this->IsTypeOf<Archer>())
 		{
@@ -44,7 +53,7 @@ void Enemy::Tick(float deltaTime)
 		if (this->IsTypeOf<Guard>())
 		{
 			pathDirection.clear();
-			pathDirection = FindRoute(Renderer::Get().GetPlayerPosition()); //Guard.
+			pathDirection = FindRoute(level->GetPlayerPosition()); //Guard.
 		}
 	}
 	// Enemy 방향에 맞게 조정
@@ -96,7 +105,7 @@ std::vector<Vector2> Enemy::FindRoute(const Vector2& destination)
 	std::shared_ptr<GameLevel> level = Cast<GameLevel>(GetOwner());
 	map = level->GetMap();
 	Vector2 Start = GetPosition();
-	Astar routeFinder(map, Start, Renderer::Get().GetPlayerPosition());
+	Astar routeFinder(map, Start, level->GetPlayerPosition());
 	std::vector<Vector2> moveStack = routeFinder.AstarFinder(map, Start, destination);
 	moveIndex = static_cast<int>(moveStack.size() - 1);
 	return moveStack;
@@ -133,7 +142,8 @@ void Enemy::Awake()
 // sightDegree로 판별. 
 bool Enemy::Searching()
 {
-	Vector2 playerPos = Renderer::Get().GetPlayerPosition();
+	std::shared_ptr<GameLevel> level = Cast<GameLevel>(GetOwner());
+	Vector2 playerPos = level->GetPlayerPosition();
 	Vector2 myPos = GetPosition();
 	distance = static_cast<float>(std::sqrt(
 		std::pow(playerPos.x - myPos.x, 2)
@@ -158,7 +168,6 @@ bool Enemy::Searching()
 	}
 	// 직선 경로
 	std::vector<Vector2> rayDirectionQueue = RayDirectionQueueInsert(myPos);
-	std::shared_ptr<GameLevel> level = Cast<GameLevel>(GetOwner());
 	isWall = false;
 	for (Vector2 path : rayDirectionQueue)
 	{
@@ -188,7 +197,8 @@ bool Enemy::Searching()
 
 Vector2 Enemy::FacingDirection(const Vector2& currentPosition)
 {
-	Vector2 playerPos = Renderer::Get().GetPlayerPosition();
+	std::shared_ptr<GameLevel> level = Cast<GameLevel>(GetOwner());
+	Vector2 playerPos = level->GetPlayerPosition();
 	float innerProduct = static_cast<float>(
 		(playerPos.x - currentPosition.x) * rightVector.x
 		+ (playerPos.y - currentPosition.y) * rightVector.y
@@ -262,9 +272,10 @@ Vector2 Enemy::FacingDirection(const Vector2& currentPosition)
 
 std::vector<Vector2> Enemy::RayDirectionQueueInsert(const Vector2& currentPosition)
 {
+	std::shared_ptr<GameLevel> level = Cast<GameLevel>(GetOwner());
 	std::vector<Vector2> rayDirectionQueue;
 	Vector2 pos = currentPosition;
-	Vector2 playerPos = Renderer::Get().GetPlayerPosition();
+	Vector2 playerPos = level->GetPlayerPosition();
 	while (pos != playerPos)
 	{
 		Vector2 faceDirction = FacingDirection(pos);
