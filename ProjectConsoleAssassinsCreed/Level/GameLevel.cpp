@@ -20,7 +20,7 @@ using namespace Craft;
 
 
 
-bool GameLevel::CanMove(const Craft::Vector2& playerPosition, const Craft::Vector2& nextPosition)
+bool GameLevel::CanMove(const Craft::Vector2& nextPosition)
 {
 	//게임 클리어인 경우 처리 안함
 	if (isGameOver 
@@ -30,12 +30,14 @@ bool GameLevel::CanMove(const Craft::Vector2& playerPosition, const Craft::Vecto
 		return false;
 	}
 
-	// 플레이어가 이동하려는 곳에 벽이 있을 경우 
-	for (const std::shared_ptr<Actor>& actor : actorList)
+	
+	// 이동하려는 곳에 벽이 있을 경우 
+	// 이동하려는 곳에 이동 객체가 있는가
+	for (const std::shared_ptr<Actor>& actor : collisionEnabledActorList)
 	{
 		if (actor->GetPosition() == nextPosition)
 		{
-			if (actor->IsTypeOf<Wall>())
+			if (actor->IsTypeOf<Player>())
 			{
 				return false;
 			}
@@ -45,6 +47,14 @@ bool GameLevel::CanMove(const Craft::Vector2& playerPosition, const Craft::Vecto
 			}
 			return true; // 박스는 이미 처리됨
 		}
+	}
+	if (map[nextPosition.y][nextPosition.x])
+	{
+		return false;
+	}
+	else
+	{
+		return true;
 	}
 	return false; // 예상치 못한 처리 - 이동 불가
 }
@@ -58,17 +68,15 @@ bool GameLevel::CanAttack(const Craft::Vector2& playerPosition, const Craft::Vec
 	{
 		return false;
 	}
+
 	//공격하려는 곳이 벽인 경우
-	for (const std::shared_ptr<Actor>& actor : actorList)
+	if (map[playerPosition.y + face.y][playerPosition.x + face.x])
 	{
-		if (actor->GetPosition() == (playerPosition + face))
-		{
-			if (actor->IsTypeOf<Wall>())
-			{
-				return false;
-			}
-			return true;
-		}
+		return false;
+	}
+	else
+	{
+		return true;
 	}
 	return false;
 }
@@ -77,12 +85,13 @@ void GameLevel::IsSighted()
 {
 	for (const std::shared_ptr<Actor>& actor : actorList)
 	{
-		actor->SetIsSighted(SearchingActorGL(actor));
+		//actor->SetIsSighted(SearchingActorGL(actor)); //실제 게임
+		actor->SetIsSighted(true); //디버깅
 	}
 }
 
 // 현재 위치가 벽인지
-bool GameLevel::IsWall(const Craft::Vector2& currentPositon)
+bool GameLevel::IsWall(const Craft::Vector2& currentPosition)
 {
 	//게임 클리어인 경우 처리 안함
 	if (isGameOver
@@ -94,72 +103,76 @@ bool GameLevel::IsWall(const Craft::Vector2& currentPositon)
 	}
 
 	// 플레이어가 이동하려는 곳에 벽이 있을 경우 
-	for (const std::shared_ptr<Actor>& actor : actorList)
+	if (currentPosition.x >= 0 && currentPosition.x >= 0)
 	{
-		if (actor->GetPosition() == currentPositon)
+		if (map[currentPosition.y][currentPosition.x])
 		{
-			if (actor->IsTypeOf<Wall>())
-			{
-				return true;
-			}
+			return true;
 		}
 	}
+	//for (const std::shared_ptr<Actor>& actor : actorList)
+	//{
+	//	if (actor->GetPosition() == currentPosition)
+	//	{
+	//		if (actor->IsTypeOf<Wall>())
+	//		{
+	//			return true;
+	//		}
+	//	}
+	//}
 	return false; // 예상치 못한 처리 - 이동 불가
 }
 
 std::vector<Vector2> GameLevel::RayDirectionQueueInsertGL(const Vector2& actorPosition)
 {
 	std::vector<Vector2> rayDirectionQueue;
-	Vector2 currentPos = GetPlayerPosition();
-	Vector2 dPos = actorPosition;
+	Vector2 currentPos = GetPlayerPosition(); // 출발지
+	Vector2 dPos = actorPosition; // 목적지
 	while (dPos != currentPos)
 	{
-		Vector2 faceDirction = FacingDirectionGL(currentPos);
+		Vector2 faceDirction = FacingDirectionGL(currentPos, actorPosition);
 		currentPos = currentPos + faceDirction;
 		rayDirectionQueue.emplace_back(currentPos);
-	}
+	} //마지막 액터 위치 안들어가는 게 맞는 로직
+	rayDirectionQueue.pop_back();
 	return rayDirectionQueue;
 }
 
-Vector2 GameLevel::FacingDirectionGL(const Vector2& actorPosition)
+Vector2 GameLevel::FacingDirectionGL(const Vector2& currentPos, const Vector2& actorPosition)
 {
-	Vector2 playerPos = GetPlayerPosition();
 	float innerProduct = static_cast<float>(
-		(- playerPos.x + actorPosition.x) * 1
-		+ (- playerPos.y + actorPosition.y) * 0
+		(-currentPos.x + actorPosition.x) * 1
+		+ (-currentPos.y + actorPosition.y) * 0
 		);
 	float rayDistance = static_cast<float>(std::sqrt(
-		std::pow(playerPos.x - actorPosition.x, 2)
-		+ std::pow(playerPos.y - actorPosition.y, 2)
+		std::pow(currentPos.x - actorPosition.x, 2)
+		+ std::pow(currentPos.y - actorPosition.y, 2)
 	));
 	float absFace = 1;
 	double facingAngle = 0;
 	if (rayDistance > 0)
-	{
+	{ //각도 계산.
 		facingAngle = acos(innerProduct / (rayDistance * absFace)) * ANGLE;
 	}
-	if (playerPos.y - actorPosition.y < 0)
+	if (currentPos.y - actorPosition.y < 0) // 플레이어보다 액터가 아래.
 	{
 		if (facingAngle < 23)
 		{
 			return Vector2(1, 0);
 		}
-		else if (facingAngle > 23
-			&& facingAngle < 68)
+		else if (facingAngle < 68)
 		{
-			return Vector2(1, -1);
+			return Vector2(1, 1);
 		}
-		else if (facingAngle > 68
-			&& facingAngle < 113)
+		else if (facingAngle < 113)
 		{
-			return Vector2(0, -1);
+			return Vector2(0, 1);
 		}
-		else if (facingAngle > 113
-			&& facingAngle < 158)
+		else if (facingAngle < 158)
 		{
-			return Vector2(-1, -1);
+			return Vector2(-1, 1);
 		}
-		else if (facingAngle > 158)
+		else if (facingAngle >= 158)
 		{
 			return Vector2(-1, 0);
 		}
@@ -170,22 +183,19 @@ Vector2 GameLevel::FacingDirectionGL(const Vector2& actorPosition)
 		{
 			return Vector2(1, 0);
 		}
-		else if (facingAngle > 23
-			&& facingAngle < 68)
+		else if (facingAngle < 68)
 		{
-			return Vector2(1, 1);
+			return Vector2(1, -1);
 		}
-		else if (facingAngle > 68
-			&& facingAngle < 113)
+		else if (facingAngle < 113)
 		{
-			return Vector2(0, 1);
+			return Vector2(0, -1);
 		}
-		else if (facingAngle > 113
-			&& facingAngle < 158)
+		else if (facingAngle < 158)
 		{
-			return Vector2(-1, 1);
+			return Vector2(-1, -1);
 		}
-		else if (facingAngle > 158)
+		else if (facingAngle >= 158)
 		{
 			return Vector2(-1, 0);
 		}
@@ -276,7 +286,7 @@ void GameLevel::LoadMap(const std::string& filename)
 	clearMap.emplace_back();
 	
 	//액터 생성에 사용할 위치값
-	Vector2 position;
+	Vector2 position = Vector2::Zero;
 	while (true)
 	{
 		//종료 조건 모두 읽었는지 파악
@@ -425,6 +435,10 @@ bool GameLevel::SearchingActorGL(const std::shared_ptr <Actor>& actor)
 	{
 		return true;
 	}
+	else if (distance > 20)
+	{
+		return false;
+	}
 	Vector2 playerFace = GetPlayerFace();
 	float innerProduct = static_cast<float>(
 		(- playerPos.x + actorPos.x) * playerFace.x + (- playerPos.y + actorPos.y) * playerFace.y
@@ -443,8 +457,7 @@ bool GameLevel::SearchingActorGL(const std::shared_ptr <Actor>& actor)
 	{
 		relativeAngle = 0;
 	}
-
-	if (distance < 15 && relativeAngle < 50)
+	if (relativeAngle < 50)
 	{
 		std::vector<Vector2> rayDirectionQueue = RayDirectionQueueInsertGL(actorPos);
 		bool isWall = false;

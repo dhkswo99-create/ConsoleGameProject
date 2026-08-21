@@ -22,19 +22,12 @@ Enemy::Enemy(
 
 void Enemy::Tick(float deltaTime)
 {
-	std::shared_ptr<GameLevel> level = Cast<GameLevel>(GetOwner());
 	super::Tick(deltaTime);
-	
+
+	std::shared_ptr<GameLevel> level = Cast<GameLevel>(GetOwner());
 	found = Searching();
 
-	if (found)
-	{
-		SetIsSighted(true);
-	}
-	else
-	{
-		//SetIsSighted(false);
-	}
+	
 	if (!sleep && found)
 	{
 		pathDirection.clear();
@@ -123,7 +116,7 @@ void Enemy::Move(const Vector2& direction, float deltaTime)
 	if (dx > 1 || -1 > dx || dy > 1 || -1 > dy)
 	{
 		newPosition = currentPosition + direction;
-		if (level->CanMove(currentPosition, newPosition))
+		if (level->CanMove(newPosition))
 		{
 			SetPosition(newPosition);
 			dx = 0;
@@ -221,22 +214,19 @@ Vector2 Enemy::FacingDirection(const Vector2& currentPosition)
 		{
 			return Vector2(1, 0);
 		}
-		else if (facingAngle > 23
-			&& facingAngle < 68)
+		else if (facingAngle < 68)
 		{
 			return Vector2(1, -1);
 		}
-		else if (facingAngle > 68
-			&& facingAngle < 113)
+		else if (facingAngle < 113)
 		{
 			return Vector2(0, -1);
 		}
-		else if (facingAngle > 113
-			&& facingAngle < 158)
+		else if (facingAngle < 158)
 		{
 			return Vector2(-1, -1);
 		}
-		else if (facingAngle > 158)
+		else if (facingAngle >= 158)
 		{
 			return Vector2(-1, 0);
 		}
@@ -247,22 +237,19 @@ Vector2 Enemy::FacingDirection(const Vector2& currentPosition)
 		{
 			return Vector2(1, 0);
 		}
-		else if (facingAngle > 23
-			&& facingAngle < 68)
+		else if (facingAngle < 68)
 		{
 			return Vector2(1, 1);
 		}
-		else if (facingAngle > 68
-			&& facingAngle < 113)
+		else if (facingAngle < 113)
 		{
 			return Vector2(0, 1);
 		}
-		else if (facingAngle > 113
-			&& facingAngle < 158)
+		else if (facingAngle < 158)
 		{
 			return Vector2(-1, 1);
 		}
-		else if (facingAngle > 158)
+		else if (facingAngle >= 158)
 		{
 			return Vector2(-1, 0);
 		}

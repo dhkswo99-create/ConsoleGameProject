@@ -54,6 +54,8 @@ public:
 	void SetSightRange(float newSightRange) { sightRange = newSightRange; }
 	void SetDistance(float newDistance) { distance = newDistance; }
 	void SetRelativeAngle(float newRelativeAngle) { relativeAngle = newRelativeAngle; }
+	void SetMoveSpeed(float newMoveSpeed) { moveSpeed = newMoveSpeed; }
+
 
 protected:
 	//벽이 있는지

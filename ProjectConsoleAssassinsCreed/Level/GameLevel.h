@@ -16,7 +16,6 @@ public:
 
 		//플레이어 이동하려는 위치가 이동 가능한지 판단해주는 함수.
 	bool CanMove(
-		const Craft::Vector2& playerPosition,
 		const Craft::Vector2& nextPosition
 	);
 	bool CanAttack(
@@ -26,15 +25,15 @@ public:
 
 	void IsSighted();
 
-	bool IsWall(const Craft::Vector2& currentPositon);
+	bool IsWall(const Craft::Vector2& currentPosition);
 	
 	std::vector<Craft::Vector2> RayDirectionQueueInsertGL(const Craft::Vector2& actorPosition);
-	Craft::Vector2 FacingDirectionGL(const Craft::Vector2& currentPosition);
+	Craft::Vector2 FacingDirectionGL(const Craft::Vector2& currentPos, const Craft::Vector2& actorPosition);
 	bool SearchingActorGL(const std::shared_ptr<Craft::Actor>& actor);
 
 	Craft::Vector2 GetPlayerPosition() const { return player->GetPosition(); }
 	Craft::Vector2 GetPlayerFace() const { return player->GetFace(); }
-
+	 
 	std::vector<std::vector<int>> GetMap() { return map; }
 	std::vector<std::vector<int>> GetClearMap() { return clearMap; }
 

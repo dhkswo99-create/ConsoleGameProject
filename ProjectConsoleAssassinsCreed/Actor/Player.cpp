@@ -16,6 +16,8 @@ Player::Player(const Vector2& position)
 	face = Vector2::Right;
 	moveSpeed = 10.0f;
 	sortingOrder = 10;
+	xPosition = position.x;
+	yPosition = position.y;
 	//충돌 허용
 	SetColiisionEnabled(true);
 }
@@ -246,7 +248,7 @@ void Player::Move(float directionX, float directionY, float deltaTime)
 	// float -> int 형변환시 소숫점은 버림처리됨.
 	newPosition.x = static_cast<int>(xPosition);
 	newPosition.y = static_cast<int>(yPosition);
-	if (level->CanMove(currentPosition, newPosition))
+	if (level->CanMove(newPosition))
 	{
 		SetPosition(newPosition);
 	}

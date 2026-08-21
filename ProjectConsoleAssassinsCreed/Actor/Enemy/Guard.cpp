@@ -13,13 +13,12 @@ Guard::Guard(const Vector2& position)
 	:super(L"G", position, Color::Yellow)
 {
 	range = 3;
-	sightRange = 15;
-	moveSpeed = 8.0f;
+	SetSightRange(15.0f);
+	SetMoveSpeed(8.0f);
 	sortingOrder = 3;
 	castDelay = 0.6f;
 	attackDelay = 0.3f;
-
-	face = Vector2::Left;
+	SetFace(Vector2::Left);
 	//충돌 허용
 	SetColiisionEnabled(true);
 

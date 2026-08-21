@@ -9,7 +9,8 @@ class EnemyBullet : public Craft::Actor
 public:
 	EnemyBullet(
 		const Craft::Vector2& position,
-		float moveSpeed = 15.0f
+		
+		moveSpeed = 15.0f
 	);
 
 private:

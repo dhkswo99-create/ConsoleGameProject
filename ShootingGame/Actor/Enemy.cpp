@@ -19,7 +19,7 @@ Enemy::Enemy(const std::wstring& image, int yPosition)
 	if (random % 2 == 0)
 	{
 		direction = MoveDirection::left;
-		xPosition = static_cast<float>(Engine::Get().GetWidth() - width - 1);
+		xPosition = Engine::Get().GetWidth() - width - 1;
 	}
 	else
 	{

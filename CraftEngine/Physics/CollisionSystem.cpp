@@ -92,14 +92,10 @@ namespace Craft
 
 		// 이전 프레임 위치와 현재 위치를 모두 포함하는 swept bounds 계산.
 		const int leftXMin = (leftCurrent.x < leftPrevious.x) ? leftCurrent.x : leftPrevious.x;
-		const int leftXMaxCurrent = leftCurrent.x + left->GetWidth() - 1;
-		const int leftXMaxPrevious = leftPrevious.x + left->GetWidth() - 1;
-		const int leftXMax = (leftXMaxCurrent > leftXMaxPrevious) ? leftXMaxCurrent : leftXMaxPrevious;
+		const int leftXMax = (leftCurrent.x > leftPrevious.x) ? leftCurrent.x : leftPrevious.x;
 
 		const int rightXMin = (rightCurrent.x < rightPrevious.x) ? rightCurrent.x : rightPrevious.x;
-		const int rightXMaxCurrent = rightCurrent.x + right->GetWidth() - 1;
-		const int rightXMaxPrevious = rightPrevious.x + right->GetWidth() - 1;
-		const int rightXMax = (rightXMaxCurrent > rightXMaxPrevious) ? rightXMaxCurrent : rightXMaxPrevious;
+		const int rightXMax = (rightCurrent.x > rightPrevious.x) ? rightCurrent.x : rightPrevious.x;
 
 		// X좌표 기준으로 충돌이 발생할 수 없는 상황 처리.
 		if (rightXMin > leftXMax)
